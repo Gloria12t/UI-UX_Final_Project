@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lofi Music Player</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <!-- Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- import YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+
+<body>
+
+  <!-- Background gif -->
+  <div class="background">
+    <img id="background-gif" src="gif/gif1.gif" /> 
+  </div>
+  <div id = "main-title"> Lofi Music Player</div>
+
+  <!-- Main App Container -->
+  <div class="app">
+
+    <!-- Song Title -->
+    <div id="song-title">
+      Loading lofi vibes...
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="prev">⏮</button>
+      <button id="play-pause">▶</button>
+      <button id="next">⏭</button>
+    </div>
+
+  </div>
+
+  <!-- This tag is the location of the video player on the page -->
+  <div id="player"></div>
+
+  <!-- Load the IFrame API JS code -->
+  <script src="player.js"></script>
+</body>
+</html>
