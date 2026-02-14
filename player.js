@@ -132,3 +132,11 @@ function updateSongTitle() {
 document.getElementById("play-pause").addEventListener("click", togglePlayPause);
 document.getElementById("prev").addEventListener("click", previous);
 document.getElementById("next").addEventListener("click", next);
+document.body.addEventListener('click', function(event) {
+  // Don't toggle if clicking on buttons or controls
+  if (event.target.tagName === 'BUTTON' || 
+      event.target.closest('.controls')) {
+    return;
+  }
+  togglePlayPause();
+});
