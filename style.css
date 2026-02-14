@@ -1,4 +1,4 @@
-/* simple background just to test JS */
+
 
 .background {
     position: fixed;
@@ -41,7 +41,7 @@
   margin-bottom: 15px;
   max-width: 300px
 }
-/* Controls container - single definition */
+
 .controls { 
   display: flex;
   gap: 12px;
@@ -53,16 +53,16 @@
   background: transparent;
   border: none;
   color: #00ff88;
-  font-size: 20px; /* Reduced to fit the 20px button size */
+  font-size: 20px; 
   width: 20px;
   height: 20px;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex; /* Added to center the icons */
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
-  padding: 0; /* Remove default padding */
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 0; 
 }
 
 .controls button:hover {
