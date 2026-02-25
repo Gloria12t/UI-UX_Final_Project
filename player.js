@@ -1,5 +1,10 @@
 let player;
 
+// hide-ui-mode
+let hideModeEnabled = false;
+let inactivityTimer = null;
+const INACTIVITY_DELAY = 5000; // delay for 5 seconds
+
 // playlist 
 // using ID of video on youtube
 const playlist = [
@@ -191,4 +196,45 @@ function toggleUI() {
   app.classList.toggle('hidden');
 }
 
+// function to hide UI in night-mode
+function hideUI() {
+  if (!hideModeEnabled) return;
 
+  const ui = document.getElementById("ui-layer");
+  ui.classList.add("hidden-ui");
+}
+
+// function to show UI in day-mode
+function showUI() {
+  const ui = document.getElementById("ui-layer");
+  ui.classList.remove("hidden-ui");
+}
+
+// function to reset inactivity timer
+function resetInactivityTimer() {
+  if (!hideModeEnabled) return;
+
+  clearTimeout(inactivityTimer);
+  showUI();
+
+  inactivityTimer = setTimeout(hideUI, INACTIVITY_DELAY);
+}
+
+// detect user activity
+["mousemove", "keydown", "click"].forEach(eventType => {
+  document.addEventListener(eventType, resetInactivityTimer);
+});
+
+// toggle hide-ui button on/off
+const toggleBtn = document.getElementById("toggle-hide-ui");
+toggleBtn.addEventListener("click", () => {
+  hideModeEnabled = !hideModeEnabled;
+
+  toggleBtn.innerText = hideModeEnabled ? "🌙" : "☀️"; 
+  if (hideModeEnabled) {
+    resetInactivityTimer();
+  } else {
+    showUI();
+    clearTimeout(inactivityTimer);
+  }
+});

@@ -21,24 +21,31 @@
   <!-- Background gif -->
   <div class="background">
     <img id="background-gif" src="gif/gif1.gif" /> 
+    <div id="dimmer"></div>
   </div>
-  <div id = "main-title"> Lofi Music Player</div>
+  
 
   <!-- Main App Container -->
   <div class="app">
 
-    <!-- Song Title -->
-    <div id="song-title">
-      Loading lofi vibes...
-    </div>
+    <!--Wrap all UI in one container-->
+    <div id="ui-layer">
+      <div id = "main-title"> Lofi Music Player</div>
 
-    <!-- Controls -->
-    <div class="controls">
-      <button id="prev">⏮</button>
-      <button id="play-pause">▶</button>
-      <button id="next">⏭</button>
-    </div>
+      <div id="song-title">
+        Loading lofi vibes...
+      </div>
 
+      <!-- Controls -->
+      <div class="controls">
+        <button id="prev">⏮</button>
+        <button id="play-pause">▶</button>
+        <button id="next">⏭</button>
+        <button id="toggle-hide-ui">☀️</button>
+      </div>
+
+      
+    </div>
   <!-- This tag is the location of the video player on the page -->
   <div id="player"></div>
 
