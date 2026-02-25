@@ -157,3 +157,15 @@
     rgba(0, 0, 0, 0.6) 100%
   );
 }
+
+/*volume control */
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+#volume-slider {
+  width: 120px;
+  cursor: pointer;
+}

@@ -50,6 +50,7 @@ function onYouTubeIframeAPIReady() {
 
 // called when the player is ready
 function onPlayerReady() {
+  player.setVolume(50);   // set volume level to 50 as default
   player.playVideo();
   updateSongTitle();
   updateBackground();
@@ -196,6 +197,10 @@ function toggleUI() {
   app.classList.toggle('hidden');
 }
 
+/* ==============================
+  HIDE UI MODE
+============================== */
+
 // function to hide UI in night-mode
 function hideUI() {
   if (!hideModeEnabled) return;
@@ -238,3 +243,39 @@ toggleBtn.addEventListener("click", () => {
     clearTimeout(inactivityTimer);
   }
 });
+
+/* ==============================
+  VOLUME LOGIC
+============================== */
+
+const volumeSlider = document.getElementById("volume-slider");
+const muteBtn = document.getElementById("mute-btn");
+
+// volume change event
+volumeSlider.addEventListener("input", () => {
+  if (!player) return;
+
+  player.setVolume(volumeSlider.value);
+
+  if (volumeSlider.value == 0) {
+    muteBtn.textContent = "🔇";
+  } else {
+    muteBtn.textContent = "🔊";
+  }
+});
+
+// mute button
+muteBtn.addEventListener("click", () => {
+  if (!player) return;
+
+  if (player.isMuted()) {
+    player.unMute();
+    volumeSlider.value = player.getVolume();
+    muteBtn.textContent = "🔊";
+  } else {
+    player.mute();
+    volumeSlider.value = 0;
+    muteBtn.textContent = "🔇";
+  }
+});
+
