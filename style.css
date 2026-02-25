@@ -10,6 +10,11 @@
   width: 100vw;
   height: 100vh;
   object-fit: cover;
+  filter: contrast(1.05) saturate(1.1) blur(0.5px);
+
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
 }
 
 .app{
@@ -102,5 +107,53 @@
   opacity: 0.3;
   pointer-events: none;
   transition: opacity 0.8s ease;
+  z-index: 4;
+}
+
+/*grain layer*/
+#grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   z-index: 1;
+
+  background: url("textures/noise/noise2.jpg");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  opacity: 0.2;
+  mix-blend-mode: soft-light;
+}
+
+
+/*thin horizontal lines*/
+#scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.15) 0px,  /*dark level*/
+    rgba(0, 0, 0, 0.15) 5px,  /*gap size*/
+    transparent 4px,
+    transparent 9px
+  );
+
+  mix-blend-mode: overlay;
+  opacity: 0.9;
+}
+
+/*dark edges*/
+#vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+
+  background: radial-gradient(
+    circle at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
 }
