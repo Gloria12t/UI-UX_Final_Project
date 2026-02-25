@@ -196,16 +196,15 @@ function toggleUI() {
   app.classList.toggle('hidden');
 }
 
-// function to hide UI 
+// function to hide UI in night-mode
 function hideUI() {
   if (!hideModeEnabled) return;
 
   const ui = document.getElementById("ui-layer");
   ui.classList.add("hidden-ui");
-  console.log("Hiding UI...");
 }
 
-// function to show UI
+// function to show UI in day-mode
 function showUI() {
   const ui = document.getElementById("ui-layer");
   ui.classList.remove("hidden-ui");
