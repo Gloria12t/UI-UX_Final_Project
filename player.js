@@ -51,6 +51,9 @@ function onYouTubeIframeAPIReady() {
 // called when the player is ready
 function onPlayerReady() {
   player.setVolume(50);   // set volume level to 50 as default
+  currentVolumeLevel = 5;
+  updateVolume();
+
   player.playVideo();
   updateSongTitle();
   updateBackground();
@@ -235,7 +238,7 @@ const toggleBtn = document.getElementById("toggle-hide-ui");
 toggleBtn.addEventListener("click", () => {
   hideModeEnabled = !hideModeEnabled;
 
-  toggleBtn.innerText = hideModeEnabled ? "🌙" : "☀️"; 
+  toggleBtn.innerText = hideModeEnabled ? "◑" : "◐"; 
   if (hideModeEnabled) {
     resetInactivityTimer();
   } else {
@@ -248,34 +251,50 @@ toggleBtn.addEventListener("click", () => {
   VOLUME LOGIC
 ============================== */
 
-const volumeSlider = document.getElementById("volume-slider");
+const volumeBarsContainer = document.getElementById("volume-bars");
 const muteBtn = document.getElementById("mute-btn");
 
-// volume change event
-volumeSlider.addEventListener("input", () => {
+const TOTAL_BARS = 10;
+let currentVolumeLevel = 5; // default
+
+//create bars
+for (let i = 0; i < TOTAL_BARS ; i++) {
+  const bar =document.createElement("div");
+  bar.classList.add("volume-bar");
+
+  bar.addEventListener("click", () => {
+    currentVolumeLevel = i + 1;
+    updateVolume();
+  });
+
+  volumeBarsContainer.appendChild(bar);
+}
+
+// volume change 
+function updateVolume() {
   if (!player) return;
 
-  player.setVolume(volumeSlider.value);
+  const volume = (currentVolumeLevel / TOTAL_BARS) * 100;
+  player.setVolume(volume);
 
-  if (volumeSlider.value == 0) {
-    muteBtn.textContent = "🔇";
-  } else {
-    muteBtn.textContent = "🔊";
-  }
-});
+  // update UI
+  const bars = document.querySelectorAll(".volume-bar");
+  bars.forEach((bar, index) => {
+    bar.classList.toggle("active", index < currentVolumeLevel);
+  });
+
+  muteBtn.textContent = volume === 0 ? "×" : "≡";
+}
 
 // mute button
 muteBtn.addEventListener("click", () => {
   if (!player) return;
 
-  if (player.isMuted()) {
-    player.unMute();
-    volumeSlider.value = player.getVolume();
-    muteBtn.textContent = "🔊";
+  if (currentVolumeLevel === 0) {
+    currentVolumeLevel = 5;
   } else {
-    player.mute();
-    volumeSlider.value = 0;
-    muteBtn.textContent = "🔇";
+    currentVolumeLevel = 0;
   }
+  updateVolume();
 });
 
