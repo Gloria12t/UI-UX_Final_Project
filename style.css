@@ -37,6 +37,9 @@
   top:20px;
   left:20px;
   z-index:10;
+
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 #song-title{
@@ -44,7 +47,8 @@
   font-size: 16px;
   font-family: "Courier Prime";
   margin-bottom: 15px;
-  max-width: 300px
+  max-width: 300px;
+  opacity: 0.85;
 }
 
 .controls { 
@@ -68,11 +72,14 @@
   align-items: center; 
   justify-content: center; 
   padding: 0; 
+  line-height: 1;
+  gap: 12px;
 }
 
 .controls button:hover {
-  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
   transform: scale(1.1);
+  text-shadow: 0 0 6px #00ff88;
 }
 
 .controls button:active {
@@ -97,6 +104,9 @@
 .hidden-ui {
   opacity: 0;
   pointer-events: none;
+}
+#toggle-hide-ui {
+  transform: translateY(2px);  
 }
 
 /*dimmer background layer*/
@@ -164,8 +174,29 @@
   align-items: center;
   gap: 8px;
   margin-left: auto;
+  transform: translateY(2px);
 }
-#volume-slider {
-  width: 120px;
+#volume-bars {
+  display: flex;
+  gap: 4px;
   cursor: pointer;
+  
 }
+
+.volume-bar {
+  width: 8px;
+  height: 9px;
+  background: rgba(0, 255, 136, 0.2);
+  border: 1px solid #00ff88;
+  transition: all 0.2s ease; 
+}
+
+.volume-bar.active {
+  background: #00ff88;
+  box-shadow: 0 0 6px #00ff88;
+}
+
+.volume-bar:hover {
+  transform: scale(1.1);
+}
+
