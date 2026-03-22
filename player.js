@@ -3,7 +3,8 @@ let player;
 // hide-ui-mode
 let hideModeEnabled = false;
 let inactivityTimer = null;
-const INACTIVITY_DELAY = 5000; // delay for 5 seconds
+const INACTIVITY_DELAY = 15000; // delay for 15 seconds
+let fadeInterval = null;
 
 // playlist 
 // using ID of video on youtube
@@ -50,8 +51,6 @@ function onYouTubeIframeAPIReady() {
 
 // called when the player is ready
 function onPlayerReady() {
-  player.setVolume(50);   // set volume level to 50 as default
-  currentVolumeLevel = 5;
   updateVolume();
 
   player.playVideo();
@@ -238,12 +237,22 @@ const toggleBtn = document.getElementById("toggle-hide-ui");
 toggleBtn.addEventListener("click", () => {
   hideModeEnabled = !hideModeEnabled;
 
-  toggleBtn.innerText = hideModeEnabled ? "◑" : "◐"; 
+  toggleBtn.innerText = hideModeEnabled ? "◑" : "◐";
+  
+  const dimmer = document.getElementById("dimmer");
+
   if (hideModeEnabled) {
     resetInactivityTimer();
+    dimmer.style.opacity = 0.7;
+    previousVolumeLevel = currentVolumeLevel; 
+    fadeToVolume(1);
+    updateVolume();
   } else {
     showUI();
     clearTimeout(inactivityTimer);
+    dimmer.style.opacity = 0.3;
+    fadeToVolume(previousVolumeLevel);
+    updateVolume();
   }
 });
 
@@ -256,6 +265,7 @@ const muteBtn = document.getElementById("mute-btn");
 
 const TOTAL_BARS = 10;
 let currentVolumeLevel = 5; // default
+let previousVolumeLevel = 5;
 
 //create bars
 for (let i = 0; i < TOTAL_BARS ; i++) {
@@ -263,6 +273,11 @@ for (let i = 0; i < TOTAL_BARS ; i++) {
   bar.classList.add("volume-bar");
 
   bar.addEventListener("click", () => {
+    if (fadeInterval) {
+      clearInterval(fadeInterval);
+      fadeInterval = null;
+    }
+
     currentVolumeLevel = i + 1;
     updateVolume();
   });
@@ -290,6 +305,11 @@ function updateVolume() {
 muteBtn.addEventListener("click", () => {
   if (!player) return;
 
+  if (fadeInterval) {
+    clearInterval(fadeInterval);
+    fadeInterval = null;
+  }
+
   if (currentVolumeLevel === 0) {
     currentVolumeLevel = 5;
   } else {
@@ -298,3 +318,32 @@ muteBtn.addEventListener("click", () => {
   updateVolume();
 });
 
+// dancing volume bars
+function animateBars() {
+  const bars = document.querySelectorAll(".volume-bar");
+
+  bars.forEach((bar, i) => {
+    const scale = Math.random() * 1.5 + 0.3;
+    bar.style.transform = `scaleY(${scale})`;
+  });
+}
+
+setInterval(animateBars, 150);
+
+// reduce volume gradually in night mode
+function fadeToVolume(targetLevel) {
+  if (fadeInterval) {
+    clearInterval(fadeInterval);
+  }
+  const step = targetLevel > currentVolumeLevel ? 1 : -1;
+
+  fadeInterval = setInterval(() => {
+    if (currentVolumeLevel === targetLevel) {
+      clearInterval(fadeInterval);
+      fadeInterval = null;
+    } else {
+      currentVolumeLevel += step;
+      updateVolume();
+    }
+  }, 5000); // volume reduce 1 level after every 5s
+}
