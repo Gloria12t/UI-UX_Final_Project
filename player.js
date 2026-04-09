@@ -322,13 +322,55 @@ muteBtn.addEventListener("click", () => {
 function animateBars() {
   const bars = document.querySelectorAll(".volume-bar");
 
-  bars.forEach((bar, i) => {
+  bars.forEach((bar) => {
     const scale = Math.random() * 1.5 + 0.3;
     bar.style.transform = `scaleY(${scale})`;
   });
 }
 
 setInterval(animateBars, 150);
+
+/* ==============================
+  WEATHER WIDGET
+============================== */
+
+function weatherIcon(code) {
+  if (code === 113) return "Clear";
+  if (code === 116) return "Partly Cloudy";
+  if (code === 119 || code === 122) return "Cloudy";
+  if (code === 143 || code === 248 || code === 260) return "Foggy";
+  if (code >= 263 && code <= 281) return "Drizzle";
+  if (code >= 293 && code <= 321) return "Rain";
+  if (code >= 323 && code <= 377) return "Snow";
+  if (code >= 386 && code <= 395) return "Thunderstorm";
+  return "Unknown";
+}
+
+async function fetchWeather() {
+  try {
+    const res = await fetch("https://wttr.in/?format=j1");
+    const data = await res.json();
+
+    const condition = data.current_condition[0];
+    const area = data.nearest_area[0];
+
+    const city = area.areaName[0].value;
+    const country = area.country[0].value;
+    const tempC = condition.temp_C;
+    const tempF = condition.temp_F;
+    const code = parseInt(condition.weatherCode);
+    const desc = weatherIcon(code);
+
+    document.getElementById("weather-location").textContent = `${city}, ${country}`;
+    document.getElementById("weather-temp").textContent = `${tempC}°C / ${tempF}°F`;
+    document.getElementById("weather-desc").textContent = desc;
+  } catch (e) {
+    // silently fail — weather is decorative
+  }
+}
+
+fetchWeather();
+setInterval(fetchWeather, 10 * 60 * 1000); // refresh every 10 minutes
 
 // reduce volume gradually in night mode
 function fadeToVolume(targetLevel) {
