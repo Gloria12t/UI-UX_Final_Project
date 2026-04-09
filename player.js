@@ -335,16 +335,29 @@ setInterval(animateBars, 150);
 ============================== */
 
 function weatherIcon(code) {
-  if (code === 113) return "Clear";
-  if (code === 116) return "Partly Cloudy";
-  if (code === 119 || code === 122) return "Cloudy";
-  if (code === 143 || code === 248 || code === 260) return "Foggy";
-  if (code >= 263 && code <= 281) return "Drizzle";
-  if (code >= 293 && code <= 321) return "Rain";
-  if (code >= 323 && code <= 377) return "Snow";
-  if (code >= 386 && code <= 395) return "Thunderstorm";
-  return "Unknown";
+  if (code === 113) return "☀️";
+  if (code === 116) return "⛅";
+  if (code === 119 || code === 122) return "☁️";
+  if (code === 143 || code === 248 || code === 260) return "🌫️";
+  if (code >= 263 && code <= 281) return "🌦️";
+  if (code >= 293 && code <= 321) return "🌧️";
+  if (code >= 323 && code <= 377) return "🌨️";
+  if (code >= 386 && code <= 395) return "⛈️";
+  return "🌡️";
 }
+
+function updateClock() {
+  const now = new Date();
+
+  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const dateStr = now.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+
+  document.getElementById("weather-time").textContent = timeStr;
+  document.getElementById("weather-date").textContent = dateStr;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
 
 async function fetchWeather() {
   try {
@@ -362,8 +375,8 @@ async function fetchWeather() {
     const desc = weatherIcon(code);
 
     document.getElementById("weather-location").textContent = `${city}, ${country}`;
+    document.getElementById("weather-icon").textContent = desc;
     document.getElementById("weather-temp").textContent = `${tempC}°C / ${tempF}°F`;
-    document.getElementById("weather-desc").textContent = desc;
   } catch (e) {
     // silently fail — weather is decorative
   }
