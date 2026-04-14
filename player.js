@@ -1,3 +1,77 @@
+/* ==============================
+  CUSTOM CURSOR
+============================== */
+
+const cursorOptions = [
+  { emoji: "🌸", label: "Sakura" },
+  { emoji: "🐱", label: "Cat"    },
+  { emoji: "🎵", label: "Music"  },
+  { emoji: "🌙", label: "Moon"   },
+  { emoji: "🍵", label: "Matcha" },
+  { emoji: "⭐", label: "Star"   },
+];
+
+const cursorEl = document.createElement("div");
+cursorEl.id = "custom-cursor";
+document.body.appendChild(cursorEl);
+
+const sparkleChars = ["✦", "✧", "⋆", "✿", "·"];
+
+function setActiveCursor(emoji) {
+  cursorEl.textContent = emoji;
+  localStorage.setItem("lofi-cursor", emoji);
+
+  document.querySelectorAll(".cursor-option").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.emoji === emoji);
+  });
+}
+
+// build picker options
+const cursorOptionsEl = document.getElementById("cursor-options");
+cursorOptions.forEach(({ emoji, label }) => {
+  const btn = document.createElement("div");
+  btn.classList.add("cursor-option");
+  btn.dataset.emoji = emoji;
+  btn.textContent = emoji;
+  btn.title = label;
+  btn.addEventListener("click", () => setActiveCursor(emoji));
+  cursorOptionsEl.appendChild(btn);
+});
+
+// restore saved cursor or default to sakura
+const savedCursor = localStorage.getItem("lofi-cursor") || "🌸";
+setActiveCursor(savedCursor);
+
+// toggle picker open/close
+const toggleCursorBtn = document.getElementById("toggle-cursor-picker");
+toggleCursorBtn.addEventListener("click", () => {
+  const isOpen = cursorOptionsEl.classList.toggle("open");
+  toggleCursorBtn.classList.toggle("open", isOpen);
+});
+
+// mouse tracking + sparkle trail
+document.addEventListener("mousemove", (e) => {
+  cursorEl.style.left = e.clientX + "px";
+  cursorEl.style.top  = e.clientY + "px";
+
+  if (Math.random() < 0.25) {
+    const s = document.createElement("div");
+    s.classList.add("cursor-sparkle");
+    s.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+    s.style.left  = (e.clientX + (Math.random() - 0.5) * 16) + "px";
+    s.style.top   = (e.clientY + (Math.random() - 0.5) * 16) + "px";
+    s.style.color = Math.random() > 0.5 ? "#00ff88" : "white";
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 700);
+  }
+});
+
+document.addEventListener("mouseleave", () => { cursorEl.style.opacity = "0"; });
+document.addEventListener("mouseenter", () => { cursorEl.style.opacity = "1"; });
+
+document.addEventListener("mousedown", () => { cursorEl.style.animationDuration = "0.6s"; });
+document.addEventListener("mouseup",   () => { cursorEl.style.animationDuration = "6s";   });
+
 let player;
 
 // hide-ui-mode

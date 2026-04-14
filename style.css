@@ -1,5 +1,111 @@
 
 
+/* cursor picker */
+#cursor-picker {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#toggle-cursor-picker {
+  background: transparent;
+  border: none;
+  color: #00ff88;
+  font-size: 20px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.4s ease, text-shadow 0.2s ease;
+}
+
+#toggle-cursor-picker:hover {
+  text-shadow: 0 0 8px #00ff88;
+}
+
+#toggle-cursor-picker.open {
+  transform: rotate(45deg);
+  text-shadow: 0 0 8px #00ff88;
+}
+
+#cursor-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+#cursor-options.open {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.cursor-option {
+  font-size: 20px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cursor-option:hover {
+  transform: scale(1.25);
+}
+
+.cursor-option.active {
+  border-color: #00ff88;
+  box-shadow: 0 0 8px #00ff88;
+}
+
+/* hide default cursor sitewide */
+* {
+  cursor: none !important;
+}
+
+/* custom cursor */
+#custom-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  font-size: 22px;
+  transform: translate(-50%, -50%);
+  animation: cursor-spin 6s linear infinite;
+  transition: opacity 0.2s ease;
+  line-height: 1;
+}
+
+@keyframes cursor-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg);   }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* sparkle trail particles */
+.cursor-sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  font-size: 13px;
+  line-height: 1;
+  animation: sparkle-fade 0.7s ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
+  100% { opacity: 0; transform: translate(-50%, -160%) scale(0.4); }
+}
+
 .background {
     position: fixed;
     inset: 0;
