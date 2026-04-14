@@ -1,5 +1,31 @@
 
 
+/* encouragement typewriter */
+#encouragement {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  font-family: "Courier Prime", monospace;
+  font-size: 18px;
+  color: white;
+  opacity: 0.75;
+  max-width: 360px;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+#encouragement-cursor {
+  color: #00ff88;
+  animation: blink 0.8s step-end infinite;
+  margin-left: 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 /* cursor picker */
 #cursor-picker {
   position: fixed;

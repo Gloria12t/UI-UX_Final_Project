@@ -416,6 +416,55 @@ function animateBars() {
 setInterval(animateBars, 150);
 
 /* ==============================
+  ENCOURAGEMENT TYPEWRITER
+============================== */
+
+const encouragements = [
+  "Hey, you're doing great! Keep going...",
+  "One step at a time. You've got this.",
+  "Keep working, keep trying. You'll get there!",
+  "Small progress is still progress.",
+  "Take a deep breath. You're doing amazing.",
+  "Believe in yourself. The best is yet to come.",
+  "Stay focused. Your hard work will pay off.",
+  "Proud of you for showing up today.",
+  "It's okay to rest. Then keep going.",
+  "You are capable of more than you know.",
+];
+
+let encIndex = 0;
+let encChar  = 0;
+let encDeleting = false;
+
+function typeEncouragement() {
+  const el   = document.getElementById("encouragement-text");
+  const msg  = encouragements[encIndex];
+
+  if (!encDeleting) {
+    el.textContent = msg.slice(0, encChar + 1);
+    encChar++;
+    if (encChar === msg.length) {
+      encDeleting = true;
+      setTimeout(typeEncouragement, 3800);
+      return;
+    }
+    setTimeout(typeEncouragement, 65);
+  } else {
+    el.textContent = msg.slice(0, encChar - 1);
+    encChar--;
+    if (encChar === 0) {
+      encDeleting = false;
+      encIndex = (encIndex + 1) % encouragements.length;
+      setTimeout(typeEncouragement, 400);
+      return;
+    }
+    setTimeout(typeEncouragement, 28);
+  }
+}
+
+typeEncouragement();
+
+/* ==============================
   WEATHER WIDGET
 ============================== */
 
