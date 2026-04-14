@@ -35,15 +35,14 @@
     <div id="ui-layer">
       <div id = "main-title"> Lofi Music Player</div>
 
-      <div id="song-title">
-        Loading lofi vibes...
-      </div>
+      <div id="song-title"><span>Loading lofi vibes...</span></div>
 
       <!-- Controls -->
       <div class="controls">
         <button id="prev">⏮</button>
         <button id="play-pause">▶</button>
         <button id="next">⏭</button>
+        <button id="shuffle">⇄</button>
         <button id="toggle-hide-ui">◐</button>
 
         <!-- Volume Control -->
@@ -56,6 +55,17 @@
     </div>
 
     
+  <!-- Encouragement widget -->
+  <div id="encouragement">
+    <span id="encouragement-text"></span><span id="encouragement-cursor">|</span>
+  </div>
+
+  <!-- Cursor Picker -->
+  <div id="cursor-picker">
+    <button id="toggle-cursor-picker">✦</button>
+    <div id="cursor-options"></div>
+  </div>
+
   <!-- Weather widget -->
   <div id="weather-widget">
     <div id="weather-time">--:--</div>

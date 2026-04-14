@@ -1,3 +1,77 @@
+/* ==============================
+  CUSTOM CURSOR
+============================== */
+
+const cursorOptions = [
+  { emoji: "🌸", label: "Sakura" },
+  { emoji: "🐱", label: "Cat"    },
+  { emoji: "🎵", label: "Music"  },
+  { emoji: "🌙", label: "Moon"   },
+  { emoji: "🍵", label: "Matcha" },
+  { emoji: "⭐", label: "Star"   },
+];
+
+const cursorEl = document.createElement("div");
+cursorEl.id = "custom-cursor";
+document.body.appendChild(cursorEl);
+
+const sparkleChars = ["✦", "✧", "⋆", "✿", "·"];
+
+function setActiveCursor(emoji) {
+  cursorEl.textContent = emoji;
+  localStorage.setItem("lofi-cursor", emoji);
+
+  document.querySelectorAll(".cursor-option").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.emoji === emoji);
+  });
+}
+
+// build picker options
+const cursorOptionsEl = document.getElementById("cursor-options");
+cursorOptions.forEach(({ emoji, label }) => {
+  const btn = document.createElement("div");
+  btn.classList.add("cursor-option");
+  btn.dataset.emoji = emoji;
+  btn.textContent = emoji;
+  btn.title = label;
+  btn.addEventListener("click", () => setActiveCursor(emoji));
+  cursorOptionsEl.appendChild(btn);
+});
+
+// restore saved cursor or default to sakura
+const savedCursor = localStorage.getItem("lofi-cursor") || "🌸";
+setActiveCursor(savedCursor);
+
+// toggle picker open/close
+const toggleCursorBtn = document.getElementById("toggle-cursor-picker");
+toggleCursorBtn.addEventListener("click", () => {
+  const isOpen = cursorOptionsEl.classList.toggle("open");
+  toggleCursorBtn.classList.toggle("open", isOpen);
+});
+
+// mouse tracking + sparkle trail
+document.addEventListener("mousemove", (e) => {
+  cursorEl.style.left = e.clientX + "px";
+  cursorEl.style.top  = e.clientY + "px";
+
+  if (Math.random() < 0.25) {
+    const s = document.createElement("div");
+    s.classList.add("cursor-sparkle");
+    s.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+    s.style.left  = (e.clientX + (Math.random() - 0.5) * 16) + "px";
+    s.style.top   = (e.clientY + (Math.random() - 0.5) * 16) + "px";
+    s.style.color = Math.random() > 0.5 ? "#00ff88" : "white";
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 700);
+  }
+});
+
+document.addEventListener("mouseleave", () => { cursorEl.style.opacity = "0"; });
+document.addEventListener("mouseenter", () => { cursorEl.style.opacity = "1"; });
+
+document.addEventListener("mousedown", () => { cursorEl.style.animationDuration = "0.6s"; });
+document.addEventListener("mouseup",   () => { cursorEl.style.animationDuration = "6s";   });
+
 let player;
 
 // hide-ui-mode
@@ -72,10 +146,19 @@ function onPlayerStateChange(event) {
     }    
 }
  
+let shuffleEnabled = false;
+
+function randomIndex() {
+  let idx;
+  do { idx = Math.floor(Math.random() * playlist.length); }
+  while (idx === currentIndex && playlist.length > 1);
+  return idx;
+}
+
 function playNextSong() {
-    currentIndex = (currentIndex+1) % playlist.length;
-    player.loadVideoById(playlist[currentIndex]);
-    updateBackground();
+  currentIndex = shuffleEnabled ? randomIndex() : (currentIndex + 1) % playlist.length;
+  player.loadVideoById(playlist[currentIndex]);
+  updateBackground();
 }
 
 // update background
@@ -119,20 +202,31 @@ function previous() {
 
 // next button
 function next() {
-    if (!player) return;
+  if (!player) return;
 
-    currentIndex = (currentIndex + 1) % playlist.length;
-    player.loadVideoById(playlist[currentIndex]);
-    updateBackground();
+  currentIndex = shuffleEnabled ? randomIndex() : (currentIndex + 1) % playlist.length;
+  player.loadVideoById(playlist[currentIndex]);
+  updateBackground();
 }
 
 // Update song title
 function updateSongTitle() {
   const data = player.getVideoData();
   const titleEl = document.getElementById("song-title");
+  if (!data || !data.title) return;
 
-  if (data && data.title) {
-    titleEl.innerText = data.title;
+  const span = titleEl.querySelector("span");
+  span.classList.remove("scrolling");
+  span.textContent = data.title;
+
+  // if text overflows, duplicate it for a seamless loop
+  if (span.scrollWidth > titleEl.clientWidth) {
+    const separator = "   •   ";
+    span.textContent = data.title + separator + data.title + separator;
+    // speed: ~80px/s so longer titles don't drag
+    const duration = span.scrollWidth / 2 / 80;
+    span.style.animationDuration = `${duration}s`;
+    span.classList.add("scrolling");
   }
 }
 
@@ -140,6 +234,11 @@ function updateSongTitle() {
 document.getElementById("play-pause").addEventListener("click", togglePlayPause);
 document.getElementById("prev").addEventListener("click", previous);
 document.getElementById("next").addEventListener("click", next);
+document.getElementById("shuffle").addEventListener("click", () => {
+  shuffleEnabled = !shuffleEnabled;
+  document.getElementById("shuffle").style.textShadow = shuffleEnabled ? "0 0 6px #00ff88" : "";
+  document.getElementById("shuffle").style.color = shuffleEnabled ? "#00ff88" : "";
+});
 document.body.addEventListener('click', function(event) {
   // Don't toggle if clicking on buttons or controls
   if (event.target.tagName === 'BUTTON' || 
@@ -329,6 +428,55 @@ function animateBars() {
 }
 
 setInterval(animateBars, 150);
+
+/* ==============================
+  ENCOURAGEMENT TYPEWRITER
+============================== */
+
+const encouragements = [
+  "Hey, you're doing great! Keep going...",
+  "One step at a time. You've got this.",
+  "Keep working, keep trying. You'll get there!",
+  "Small progress is still progress.",
+  "Take a deep breath. You're doing amazing.",
+  "Believe in yourself. The best is yet to come.",
+  "Stay focused. Your hard work will pay off.",
+  "Proud of you for showing up today.",
+  "It's okay to rest. Then keep going.",
+  "You are capable of more than you know.",
+];
+
+let encIndex = 0;
+let encChar  = 0;
+let encDeleting = false;
+
+function typeEncouragement() {
+  const el   = document.getElementById("encouragement-text");
+  const msg  = encouragements[encIndex];
+
+  if (!encDeleting) {
+    el.textContent = msg.slice(0, encChar + 1);
+    encChar++;
+    if (encChar === msg.length) {
+      encDeleting = true;
+      setTimeout(typeEncouragement, 3800);
+      return;
+    }
+    setTimeout(typeEncouragement, 65);
+  } else {
+    el.textContent = msg.slice(0, encChar - 1);
+    encChar--;
+    if (encChar === 0) {
+      encDeleting = false;
+      encIndex = (encIndex + 1) % encouragements.length;
+      setTimeout(typeEncouragement, 400);
+      return;
+    }
+    setTimeout(typeEncouragement, 28);
+  }
+}
+
+typeEncouragement();
 
 /* ==============================
   WEATHER WIDGET
