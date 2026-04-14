@@ -42,13 +42,28 @@
   text-transform: uppercase;
 }
 
-#song-title{
-  color:white;
+#song-title {
+  color: white;
   font-size: 16px;
   font-family: "Courier Prime";
   margin-bottom: 15px;
   max-width: 300px;
   opacity: 0.85;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#song-title span {
+  display: inline-block;
+}
+
+#song-title span.scrolling {
+  animation: marquee-scroll linear infinite;
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .controls { 

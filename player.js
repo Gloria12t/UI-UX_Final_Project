@@ -130,9 +130,20 @@ function next() {
 function updateSongTitle() {
   const data = player.getVideoData();
   const titleEl = document.getElementById("song-title");
+  if (!data || !data.title) return;
 
-  if (data && data.title) {
-    titleEl.innerText = data.title;
+  const span = titleEl.querySelector("span");
+  span.classList.remove("scrolling");
+  span.textContent = data.title;
+
+  // if text overflows, duplicate it for a seamless loop
+  if (span.scrollWidth > titleEl.clientWidth) {
+    const separator = "   •   ";
+    span.textContent = data.title + separator + data.title + separator;
+    // speed: ~80px/s so longer titles don't drag
+    const duration = span.scrollWidth / 2 / 80;
+    span.style.animationDuration = `${duration}s`;
+    span.classList.add("scrolling");
   }
 }
 
