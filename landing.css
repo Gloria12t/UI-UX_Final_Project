@@ -1,0 +1,195 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: none !important;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: black;
+}
+
+/* background layers — same as player */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.background img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(1.1) blur(0.5px);
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+}
+
+#grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: url("textures/noise/noise2.jpg");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  opacity: 0.2;
+  mix-blend-mode: soft-light;
+}
+
+#scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 5px,
+    transparent 4px,
+    transparent 9px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.9;
+}
+
+#vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: radial-gradient(
+    circle at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+#dimmer {
+  position: absolute;
+  inset: 0;
+  background: black;
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* landing content */
+.landing {
+  position: relative;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-family: "Courier Prime", monospace;
+  text-align: center;
+}
+
+.welcome-label {
+  font-size: 14px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #00ff88;
+  opacity: 0.75;
+}
+
+.landing-title {
+  font-size: 56px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+  animation: title-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes title-glow {
+  from { text-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+  to   { text-shadow: 0 0 50px rgba(0, 255, 136, 0.5); }
+}
+
+.tagline {
+  font-size: 16px;
+  color: white;
+  opacity: 0.7;
+  letter-spacing: 1px;
+  min-height: 1.5em;
+  margin-top: 4px;
+}
+
+#tagline-cursor {
+  color: #00ff88;
+  animation: blink 0.8s step-end infinite;
+  margin-left: 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* custom cursor */
+#custom-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  font-size: 22px;
+  transform: translate(-50%, -50%);
+  animation: cursor-spin 6s linear infinite;
+  transition: opacity 0.2s ease;
+  line-height: 1;
+}
+
+@keyframes cursor-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg);   }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.cursor-sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  font-size: 13px;
+  line-height: 1;
+  animation: sparkle-fade 0.7s ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1);    }
+  100% { opacity: 0; transform: translate(-50%, -160%) scale(0.4); }
+}
+
+.enter-btn {
+  margin-top: 32px;
+  padding: 12px 40px;
+  font-family: "Courier Prime", monospace;
+  font-size: 16px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #00ff88;
+  background: transparent;
+  border: 1px solid #00ff88;
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  opacity: 0;
+  animation: fade-in 1s ease 2.5s forwards;
+}
+
+.enter-btn:hover {
+  background: #00ff88;
+  color: black;
+  box-shadow: 0 0 24px rgba(0, 255, 136, 0.6);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
