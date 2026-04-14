@@ -146,10 +146,19 @@ function onPlayerStateChange(event) {
     }    
 }
  
+let shuffleEnabled = false;
+
+function randomIndex() {
+  let idx;
+  do { idx = Math.floor(Math.random() * playlist.length); }
+  while (idx === currentIndex && playlist.length > 1);
+  return idx;
+}
+
 function playNextSong() {
-    currentIndex = (currentIndex+1) % playlist.length;
-    player.loadVideoById(playlist[currentIndex]);
-    updateBackground();
+  currentIndex = shuffleEnabled ? randomIndex() : (currentIndex + 1) % playlist.length;
+  player.loadVideoById(playlist[currentIndex]);
+  updateBackground();
 }
 
 // update background
@@ -193,11 +202,11 @@ function previous() {
 
 // next button
 function next() {
-    if (!player) return;
+  if (!player) return;
 
-    currentIndex = (currentIndex + 1) % playlist.length;
-    player.loadVideoById(playlist[currentIndex]);
-    updateBackground();
+  currentIndex = shuffleEnabled ? randomIndex() : (currentIndex + 1) % playlist.length;
+  player.loadVideoById(playlist[currentIndex]);
+  updateBackground();
 }
 
 // Update song title
@@ -225,6 +234,11 @@ function updateSongTitle() {
 document.getElementById("play-pause").addEventListener("click", togglePlayPause);
 document.getElementById("prev").addEventListener("click", previous);
 document.getElementById("next").addEventListener("click", next);
+document.getElementById("shuffle").addEventListener("click", () => {
+  shuffleEnabled = !shuffleEnabled;
+  document.getElementById("shuffle").style.textShadow = shuffleEnabled ? "0 0 6px #00ff88" : "";
+  document.getElementById("shuffle").style.color = shuffleEnabled ? "#00ff88" : "";
+});
 document.body.addEventListener('click', function(event) {
   // Don't toggle if clicking on buttons or controls
   if (event.target.tagName === 'BUTTON' || 
