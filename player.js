@@ -83,11 +83,14 @@ let fadeInterval = null;
 // playlist
 const playlist = [
   "AZals4U6Z_I",
-  "yVPvYq4CNV4",
+  "QA9FpizKFeU",
   "WRhH-0rL5hw",
   "HGl75kurxok",
   "9kzE8isXlQY",
   "gGOpElxqlQw",
+  "lTRiuFIWV54",
+  "UJs6__K7gSY",
+  "AAbK---4bB4",
 ];
 
 // gif list
@@ -97,7 +100,10 @@ const gifs = [
   "gif/gif3.gif",
   "gif/gif4.gif",
   "gif/gif5.gif",
-  "gif/gif6.gif"
+  "gif/gif6.gif",
+  "gif/gif7.gif",
+  "gif/gif8.gif",
+  "gif/gif9.gif",
 ];
 
 let currentIndex = 0;
@@ -525,12 +531,15 @@ document.querySelectorAll(".ambient-slider").forEach(slider => {
 ============================== */
 
 const playlistLabels = [
-  "",
-  "Chilled Cow – Study Beats",
-  "Lofi Girl – Rainy Day",
-  "Coffee Shop Ambience",
-  "Late Night Lofi",
-  "Sleepy Lofi Beats",
+  "chill / relax / study music | studio ghibli lo-fi jazz mix",
+  "Paris Cafe French Instrumental Music — Coffee Playlist | Guitar, Piano & Accordion",
+  "Ghibili & Lofi| Relaxing Studio Ghibli Lo-Fi Music Playlist",
+  "Piano Ghibli Collection",
+  "Less talk.... more action. / Lo-fi for study, work ( with Rain sounds)",
+  "High-Energy Lofi Hip Hop Beats for a Powerful Workout",
+  "1 A.M Study Session [lofi hip hop]",
+  "Bedtime Lofi 8 hours of relaxing beats to sleep to",
+  "Matcha Cafe Relaxing Vintage Jazz for Studying & Reading | Animal Crossing Ambience"
 ];
 
 const gifPickerCard      = document.getElementById("gif-picker-card");
@@ -634,3 +643,81 @@ document.addEventListener("click", (e) => {
     closeCard(playlistPickerCard, openPlaylistBtn);
   }
 });
+
+/* ==============================
+  POMODORO TIMER
+============================== */
+
+let pomSeconds  = 25 * 60;
+let pomRunning  = false;
+let pomInterval = null;
+
+const pomDisplay   = document.getElementById("pomodoro-display");
+const pomCard      = document.getElementById("pomodoro-card");
+const pomToggleBtn = document.getElementById("toggle-pomodoro");
+
+function pomRender() {
+  const m = Math.floor(pomSeconds / 60);
+  const s = pomSeconds % 60;
+  pomDisplay.textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+  // turn red in the last 60 seconds
+  pomDisplay.classList.toggle("pom-ending", pomSeconds <= 60 && pomRunning);
+}
+
+function pomStart() {
+  if (pomRunning) return;
+  pomRunning = true;
+  document.getElementById("pom-start").classList.add("pom-active");
+  pomInterval = setInterval(() => {
+    if (pomSeconds > 0) {
+      pomSeconds--;
+      pomRender();
+    } else {
+      clearInterval(pomInterval);
+      pomRunning = false;
+      document.getElementById("pom-start").classList.remove("pom-active");
+      pomDisplay.classList.remove("pom-ending");
+    }
+  }, 1000);
+}
+
+function pomPause() {
+  clearInterval(pomInterval);
+  pomRunning = false;
+  document.getElementById("pom-start").classList.remove("pom-active");
+  pomDisplay.classList.remove("pom-ending");
+}
+
+function pomStop() {
+  clearInterval(pomInterval);
+  pomRunning  = false;
+  pomSeconds  = 25 * 60;
+  document.getElementById("pom-start").classList.remove("pom-active");
+  pomDisplay.classList.remove("pom-ending");
+  pomRender();
+}
+
+function pomAdd5() {
+  pomSeconds += 5 * 60;
+  pomRender();
+}
+
+// toggle card open/close
+pomToggleBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const isHidden = pomCard.classList.toggle("hidden-pomodoro");
+  pomToggleBtn.classList.toggle("active", !isHidden);
+});
+
+// close when clicking outside
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("#pomodoro-card") && !e.target.closest("#toggle-pomodoro")) {
+    pomCard.classList.add("hidden-pomodoro");
+    pomToggleBtn.classList.remove("active");
+  }
+});
+
+document.getElementById("pom-start").addEventListener("click", pomStart);
+document.getElementById("pom-pause").addEventListener("click", pomPause);
+document.getElementById("pom-stop").addEventListener("click",  pomStop);
+document.getElementById("pom-add5").addEventListener("click",  pomAdd5);

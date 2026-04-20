@@ -30,9 +30,123 @@
   right: 20px;
   z-index: 10;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;       /* was column */
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* change existing rule from column to row */
+#top-right-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;       /* was column */
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* pomodoro toggle button — matches existing button style */
+#toggle-pomodoro {
+  background: transparent;
+  border: none;
+  color: #00ff88;
+  font-family: "Courier Prime", monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  height: 24px;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  padding: 0;
+  transition: transform 0.3s ease, text-shadow 0.2s ease;
+}
+
+#toggle-pomodoro:hover {
+  text-shadow: 0 0 8px #00ff88;
+  transform: scale(1.15);
+}
+
+#toggle-pomodoro.active {
+  text-shadow: 0 0 8px #00ff88;
+}
+
+/* pomodoro card */
+#pomodoro-card {
+  position: fixed;
+  top: 56px;
+  right: 20px;
+  z-index: 20;
+  padding: 16px;
+  width: 200px;
+  font-family: "Courier Prime", monospace;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#pomodoro-card.hidden-pomodoro {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
+
+#pomodoro-label {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #00ff88;
+  opacity: 0.8;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+#pomodoro-display {
+  font-size: 40px;
+  font-weight: 700;
+  color:white;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 14px;
+  line-height: 1;
+}
+
+#pomodoro-display.pom-ending {
+  color: #ff6b6b;
+  text-shadow: 0 0 12px rgba(255, 107, 107, 0.5);
+}
+
+.pomodoro-btns {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.pom-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  color: #00ff88;
+  font-family: "Courier Prime", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 8px;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pom-btn:hover {
+  background: rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+}
+
+.pom-btn.pom-active {
+  background: rgba(0, 255, 136, 0.15);
+  border-color: #00ff88;
+  box-shadow: 0 0 6px rgba(0, 255, 136, 0.3);
+}
+
+#pom-add5 {
+  padding: 5px 16px;
 }
 
 #toggle-hide-ui {
@@ -428,7 +542,7 @@
 }
 
 #ambient-label {
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: #00ff88;
@@ -449,7 +563,7 @@
 }
 
 .ambient-name {
-  font-size: 11px;
+  font-size: 13px;
   color: white;
   opacity: 0.7;
   letter-spacing: 1px;

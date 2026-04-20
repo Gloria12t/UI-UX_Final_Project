@@ -24,6 +24,7 @@
 
   <!-- Top-right: toggle-hide-ui ABOVE cursor picker -->
   <div id="top-right-controls">
+    <button id="toggle-pomodoro">pomodoro</button>
     <button id="toggle-hide-ui">◐</button>
     <div id="cursor-picker">
       <button id="toggle-cursor-picker">✦</button>
@@ -111,7 +112,7 @@
   <!-- Bottom-center: GIF + Playlist pickers -->
   <div id="bottom-center-controls">
     <button id="open-gif-picker" class="bottom-icon-btn">
-      <span class="bottom-btn-label">Gif</span>
+      <span class="bottom-btn-label">Background</span>
     </button>
     <button id="open-playlist-picker" class="bottom-icon-btn">
       <span class="bottom-btn-label">Playlist</span>
@@ -136,6 +137,17 @@
     <div class="picker-card-list" id="playlist-list"></div>
   </div>
 
+  <div id="pomodoro-card" class="hidden-pomodoro">
+    <div id="pomodoro-display">25:00</div>
+      <div class="pomodoro-btns">
+      <button class="pom-btn" id="pom-start">Start</button>
+      <button class="pom-btn" id="pom-pause">Pause</button>
+      <button class="pom-btn" id="pom-stop">Stop</button>
+    </div>
+    <div class="pomodoro-btns">
+    <button class="pom-btn" id="pom-add5">+5 Min</button>
+    </div>
+</div>
   <script src="player.js"></script>
 </body>
 </html>
