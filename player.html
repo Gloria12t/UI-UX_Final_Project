@@ -6,13 +6,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <!-- Responsive -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
-
-  <!-- import YouTube IFrame API -->
   <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 
@@ -20,50 +15,83 @@
 
   <!-- Background gif -->
   <div class="background">
-    <img id="background-gif" src="gif/gif1.gif" /> 
+    <img id="background-gif" src="gif/gif1.gif" />
     <div id="grain"></div>
     <div id="scanlines"></div>
     <div id="vignette"></div>
     <div id="dimmer"></div>
   </div>
-  
+
+  <!-- Top-right: toggle-hide-ui ABOVE cursor picker -->
+  <div id="top-right-controls">
+    <button id="toggle-hide-ui">◐</button>
+    <div id="cursor-picker">
+      <button id="toggle-cursor-picker">✦</button>
+      <div id="cursor-options"></div>
+    </div>
+  </div>
+
+  <!-- Top-left: Ambient Sounds -->
+  <div id="ambient-panel">
+    <div id="ambient-label">Ambient Sounds</div>
+    <div id="ambient-sounds">
+      <div class="ambient-track">
+        <span class="ambient-name">Rain</span>
+        <div class="ambient-vol-wrap">
+          <input type="range" class="ambient-slider" data-sound="rain" min="0" max="100" value="0" />
+        </div>
+      </div>
+      <div class="ambient-track">
+        <span class="ambient-name">Waves</span>
+        <div class="ambient-vol-wrap">
+          <input type="range" class="ambient-slider" data-sound="waves" min="0" max="100" value="0" />
+        </div>
+      </div>
+      <div class="ambient-track">
+        <span class="ambient-name">Birds</span>
+        <div class="ambient-vol-wrap">
+          <input type="range" class="ambient-slider" data-sound="birds" min="0" max="100" value="0" />
+        </div>
+      </div>
+      <div class="ambient-track">
+        <span class="ambient-name">Campfire</span>
+        <div class="ambient-vol-wrap">
+          <input type="range" class="ambient-slider" data-sound="campfire" min="0" max="100" value="0" />
+        </div>
+      </div>
+      <div class="ambient-track">
+        <span class="ambient-name">Cafe</span>
+        <div class="ambient-vol-wrap">
+          <input type="range" class="ambient-slider" data-sound="cafe" min="0" max="100" value="0" />
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Main App Container -->
   <div class="app">
-
-    <!--Wrap all UI in one container-->
     <div id="ui-layer">
-      <div id = "main-title"> Lofi Music Player</div>
-
+      <div id="main-title">Lofi Music Player</div>
       <div id="song-title"><span>Loading lofi vibes...</span></div>
 
-      <!-- Controls -->
+      <!-- Controls (no shuffle) -->
       <div class="controls">
         <button id="prev">⏮</button>
         <button id="play-pause">▶</button>
         <button id="next">⏭</button>
-        <button id="shuffle">⇄</button>
-        <button id="toggle-hide-ui">◐</button>
 
         <!-- Volume Control -->
         <div class="volume-control">
           <button id="mute-btn">≡</button>
           <div id="volume-bars"></div>
         </div>
-        
       </div>
     </div>
 
-    
-  <!-- Encouragement widget -->
-  <div id="encouragement">
-    <span id="encouragement-text"></span><span id="encouragement-cursor">|</span>
-  </div>
-
-  <!-- Cursor Picker -->
-  <div id="cursor-picker">
-    <button id="toggle-cursor-picker">✦</button>
-    <div id="cursor-options"></div>
+    <!-- Encouragement widget -->
+    <div id="encouragement">
+      <span id="encouragement-text"></span><span id="encouragement-cursor">|</span>
+    </div>
   </div>
 
   <!-- Weather widget -->
@@ -77,10 +105,37 @@
     </div>
   </div>
 
-  <!-- This tag is the location of the video player on the page -->
+  <!-- YouTube player (hidden) -->
   <div id="player"></div>
 
-  <!-- Load the IFrame API JS code -->
+  <!-- Bottom-center: GIF + Playlist pickers -->
+  <div id="bottom-center-controls">
+    <button id="open-gif-picker" class="bottom-icon-btn">
+      <span class="bottom-btn-label">Gif</span>
+    </button>
+    <button id="open-playlist-picker" class="bottom-icon-btn">
+      <span class="bottom-btn-label">Playlist</span>
+    </button>
+  </div>
+
+  <!-- GIF Picker Card -->
+  <div id="gif-picker-card" class="picker-card hidden-card">
+    <div class="picker-card-header">
+      <span class="picker-card-title">Choose Background</span>
+      <button class="picker-card-close">✕</button>
+    </div>
+    <div class="picker-card-grid" id="gif-grid"></div>
+  </div>
+
+  <!-- Playlist Picker Card -->
+  <div id="playlist-picker-card" class="picker-card hidden-card">
+    <div class="picker-card-header">
+      <span class="picker-card-title">Choose Track</span>
+      <button class="picker-card-close">✕</button>
+    </div>
+    <div class="picker-card-list" id="playlist-list"></div>
+  </div>
+
   <script src="player.js"></script>
 </body>
 </html>

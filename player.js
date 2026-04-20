@@ -5,10 +5,12 @@
 const cursorOptions = [
   { emoji: "🌸", label: "Sakura" },
   { emoji: "🐱", label: "Cat"    },
-  { emoji: "🎵", label: "Music"  },
+  { emoji: "👀", label: "Eyes"   },
   { emoji: "🌙", label: "Moon"   },
   { emoji: "🍵", label: "Matcha" },
-  { emoji: "⭐", label: "Star"   },
+  { emoji: "⚡", label: "Bolt"   },
+  { emoji: "👻", label: "Ghost"  },
+  { emoji: "🤍", label: "Heart"  },
 ];
 
 const cursorEl = document.createElement("div");
@@ -20,7 +22,6 @@ const sparkleChars = ["✦", "✧", "⋆", "✿", "·"];
 function setActiveCursor(emoji) {
   cursorEl.textContent = emoji;
   localStorage.setItem("lofi-cursor", emoji);
-
   document.querySelectorAll(".cursor-option").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.emoji === emoji);
   });
@@ -68,7 +69,6 @@ document.addEventListener("mousemove", (e) => {
 
 document.addEventListener("mouseleave", () => { cursorEl.style.opacity = "0"; });
 document.addEventListener("mouseenter", () => { cursorEl.style.opacity = "1"; });
-
 document.addEventListener("mousedown", () => { cursorEl.style.animationDuration = "0.6s"; });
 document.addEventListener("mouseup",   () => { cursorEl.style.animationDuration = "6s";   });
 
@@ -77,11 +77,10 @@ let player;
 // hide-ui-mode
 let hideModeEnabled = false;
 let inactivityTimer = null;
-const INACTIVITY_DELAY = 15000; // delay for 15 seconds
+const INACTIVITY_DELAY = 15000;
 let fadeInterval = null;
 
-// playlist 
-// using ID of video on youtube
+// playlist
 const playlist = [
   "AZals4U6Z_I",
   "yVPvYq4CNV4",
@@ -103,8 +102,6 @@ const gifs = [
 
 let currentIndex = 0;
 
-// this function create a Player objects.
-// Will be excuted as soon as player API code downloads
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
     height: '0',
@@ -123,30 +120,25 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-// called when the player is ready
 function onPlayerReady() {
   updateVolume();
-
   player.playVideo();
   updateSongTitle();
   updateBackground();
 }
 
-// loop playlist upon the end, update song's name
 function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-        setTimeout(updateSongTitle, 300);
-        updatePlayPauseButton(true); // Update button to show pause icon
-    }
-    if (event.data === YT.PlayerState.PAUSED) {
-        updatePlayPauseButton(false); // Update button to show play icon
-    }
-    if (event.data === YT.PlayerState.ENDED) {
-        playNextSong();
-    }    
+  if (event.data === YT.PlayerState.PLAYING) {
+    setTimeout(updateSongTitle, 300);
+    updatePlayPauseButton(true);
+  }
+  if (event.data === YT.PlayerState.PAUSED) {
+    updatePlayPauseButton(false);
+  }
+  if (event.data === YT.PlayerState.ENDED) {
+    playNextSong();
+  }
 }
- 
-let shuffleEnabled = false;
 
 function randomIndex() {
   let idx;
@@ -156,25 +148,20 @@ function randomIndex() {
 }
 
 function playNextSong() {
-  currentIndex = shuffleEnabled ? randomIndex() : (currentIndex + 1) % playlist.length;
+  currentIndex = (currentIndex + 1) % playlist.length;
   player.loadVideoById(playlist[currentIndex]);
   updateBackground();
 }
 
-// update background
 function updateBackground() {
-  var img = document.getElementById("background-gif");
+  const img = document.getElementById("background-gif");
   if (!img) return;
-
-  img.src = gifs[currentIndex]
+  img.src = gifs[currentIndex];
 }
 
-// toggle play/pause
 function togglePlayPause() {
   if (!player) return;
-  
   const state = player.getPlayerState();
-  
   if (state === YT.PlayerState.PLAYING) {
     player.pauseVideo();
   } else {
@@ -182,34 +169,26 @@ function togglePlayPause() {
   }
 }
 
-// update play/pause button icon
 function updatePlayPauseButton(isPlaying) {
   const btn = document.getElementById("play-pause");
   if (!btn) return;
-  
   btn.innerText = isPlaying ? "⏸" : "▶";
 }
 
-
-// prev button
 function previous() {
-    if (!player) return;
-    
-    currentIndex = (currentIndex - 1 + playlist.length) % playlist.length; // wrap around playlist
-    player.loadVideoById(playlist[currentIndex]);
-    updateBackground();
-}
-
-// next button
-function next() {
   if (!player) return;
-
-  currentIndex = shuffleEnabled ? randomIndex() : (currentIndex + 1) % playlist.length;
+  currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
   player.loadVideoById(playlist[currentIndex]);
   updateBackground();
 }
 
-// Update song title
+function next() {
+  if (!player) return;
+  currentIndex = (currentIndex + 1) % playlist.length;
+  player.loadVideoById(playlist[currentIndex]);
+  updateBackground();
+}
+
 function updateSongTitle() {
   const data = player.getVideoData();
   const titleEl = document.getElementById("song-title");
@@ -219,11 +198,9 @@ function updateSongTitle() {
   span.classList.remove("scrolling");
   span.textContent = data.title;
 
-  // if text overflows, duplicate it for a seamless loop
   if (span.scrollWidth > titleEl.clientWidth) {
     const separator = "   •   ";
     span.textContent = data.title + separator + data.title + separator;
-    // speed: ~80px/s so longer titles don't drag
     const duration = span.scrollWidth / 2 / 80;
     span.style.animationDuration = `${duration}s`;
     span.classList.add("scrolling");
@@ -234,23 +211,15 @@ function updateSongTitle() {
 document.getElementById("play-pause").addEventListener("click", togglePlayPause);
 document.getElementById("prev").addEventListener("click", previous);
 document.getElementById("next").addEventListener("click", next);
-document.getElementById("shuffle").addEventListener("click", () => {
-  shuffleEnabled = !shuffleEnabled;
-  document.getElementById("shuffle").style.textShadow = shuffleEnabled ? "0 0 6px #00ff88" : "";
-  document.getElementById("shuffle").style.color = shuffleEnabled ? "#00ff88" : "";
-});
+
 document.body.addEventListener('click', function(event) {
-  // Don't toggle if clicking on buttons or controls
-  if (event.target.tagName === 'BUTTON' || 
-      event.target.closest('.controls')) {
-    return;
-  }
+  if (event.target.tagName === 'BUTTON' || event.target.closest('.controls')) return;
   togglePlayPause();
 });
 
 addEventListener('keydown', function(event) {
   if (event.code === 'Space') {
-    event.preventDefault(); // Prevent default spacebar behavior (scrolling)
+    event.preventDefault();
     togglePlayPause();
   }
   if (event.code === 'ArrowRight') {
@@ -260,24 +229,22 @@ addEventListener('keydown', function(event) {
   if (event.code === 'ArrowLeft') {
     event.preventDefault();
     previous();
-  } 
+  }
   if (event.code === 'KeyM') {
     event.preventDefault();
     if (!player) return;
     const currentVolume = player.getVolume();
-    player.setVolume(currentVolume > 0 ? 0 : 100); // Toggle mute/unmute
+    player.setVolume(currentVolume > 0 ? 0 : 100);
   }
   if (event.code === 'KeyF') {
     event.preventDefault();
     const elem = document.documentElement;
     if (!document.fullscreenElement) {
-      elem.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-      });
+      elem.requestFullscreen().catch(err => console.error(err));
     } else {
       document.exitFullscreen();
     }
-  } 
+  }
   if (event.code === 'KeyS') {
     event.preventDefault();
     const state = player.getPlayerState();
@@ -302,48 +269,38 @@ function toggleUI() {
   HIDE UI MODE
 ============================== */
 
-// function to hide UI in night-mode
 function hideUI() {
   if (!hideModeEnabled) return;
-
   const ui = document.getElementById("ui-layer");
   ui.classList.add("hidden-ui");
 }
 
-// function to show UI in day-mode
 function showUI() {
   const ui = document.getElementById("ui-layer");
   ui.classList.remove("hidden-ui");
 }
 
-// function to reset inactivity timer
 function resetInactivityTimer() {
   if (!hideModeEnabled) return;
-
   clearTimeout(inactivityTimer);
   showUI();
-
   inactivityTimer = setTimeout(hideUI, INACTIVITY_DELAY);
 }
 
-// detect user activity
 ["mousemove", "keydown", "click"].forEach(eventType => {
   document.addEventListener(eventType, resetInactivityTimer);
 });
 
-// toggle hide-ui button on/off
 const toggleBtn = document.getElementById("toggle-hide-ui");
 toggleBtn.addEventListener("click", () => {
   hideModeEnabled = !hideModeEnabled;
-
   toggleBtn.innerText = hideModeEnabled ? "◑" : "◐";
-  
   const dimmer = document.getElementById("dimmer");
 
   if (hideModeEnabled) {
     resetInactivityTimer();
     dimmer.style.opacity = 0.7;
-    previousVolumeLevel = currentVolumeLevel; 
+    previousVolumeLevel = currentVolumeLevel;
     fadeToVolume(1);
     updateVolume();
   } else {
@@ -363,70 +320,45 @@ const volumeBarsContainer = document.getElementById("volume-bars");
 const muteBtn = document.getElementById("mute-btn");
 
 const TOTAL_BARS = 10;
-let currentVolumeLevel = 5; // default
+let currentVolumeLevel = 5;
 let previousVolumeLevel = 5;
 
-//create bars
-for (let i = 0; i < TOTAL_BARS ; i++) {
-  const bar =document.createElement("div");
+for (let i = 0; i < TOTAL_BARS; i++) {
+  const bar = document.createElement("div");
   bar.classList.add("volume-bar");
-
   bar.addEventListener("click", () => {
-    if (fadeInterval) {
-      clearInterval(fadeInterval);
-      fadeInterval = null;
-    }
-
+    if (fadeInterval) { clearInterval(fadeInterval); fadeInterval = null; }
     currentVolumeLevel = i + 1;
     updateVolume();
   });
-
   volumeBarsContainer.appendChild(bar);
 }
 
-// volume change 
 function updateVolume() {
   if (!player) return;
-
   const volume = (currentVolumeLevel / TOTAL_BARS) * 100;
   player.setVolume(volume);
-
-  // update UI
   const bars = document.querySelectorAll(".volume-bar");
   bars.forEach((bar, index) => {
     bar.classList.toggle("active", index < currentVolumeLevel);
   });
-
   muteBtn.textContent = volume === 0 ? "×" : "≡";
 }
 
-// mute button
 muteBtn.addEventListener("click", () => {
   if (!player) return;
-
-  if (fadeInterval) {
-    clearInterval(fadeInterval);
-    fadeInterval = null;
-  }
-
-  if (currentVolumeLevel === 0) {
-    currentVolumeLevel = 5;
-  } else {
-    currentVolumeLevel = 0;
-  }
+  if (fadeInterval) { clearInterval(fadeInterval); fadeInterval = null; }
+  currentVolumeLevel = currentVolumeLevel === 0 ? 5 : 0;
   updateVolume();
 });
 
-// dancing volume bars
 function animateBars() {
   const bars = document.querySelectorAll(".volume-bar");
-
   bars.forEach((bar) => {
     const scale = Math.random() * 1.5 + 0.3;
     bar.style.transform = `scaleY(${scale})`;
   });
 }
-
 setInterval(animateBars, 150);
 
 /* ==============================
@@ -447,12 +379,12 @@ const encouragements = [
 ];
 
 let encIndex = 0;
-let encChar  = 0;
+let encChar = 0;
 let encDeleting = false;
 
 function typeEncouragement() {
-  const el   = document.getElementById("encouragement-text");
-  const msg  = encouragements[encIndex];
+  const el  = document.getElementById("encouragement-text");
+  const msg = encouragements[encIndex];
 
   if (!encDeleting) {
     el.textContent = msg.slice(0, encChar + 1);
@@ -475,7 +407,6 @@ function typeEncouragement() {
     setTimeout(typeEncouragement, 28);
   }
 }
-
 typeEncouragement();
 
 /* ==============================
@@ -496,50 +427,38 @@ function weatherIcon(code) {
 
 function updateClock() {
   const now = new Date();
-
   const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const dateStr = now.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
-
   document.getElementById("weather-time").textContent = timeStr;
   document.getElementById("weather-date").textContent = dateStr;
 }
-
 updateClock();
 setInterval(updateClock, 1000);
 
 async function fetchWeather() {
   try {
-    const res = await fetch("https://wttr.in/?format=j1");
+    const res  = await fetch("https://wttr.in/?format=j1");
     const data = await res.json();
-
     const condition = data.current_condition[0];
     const area = data.nearest_area[0];
-
-    const city = area.areaName[0].value;
+    const city    = area.areaName[0].value;
     const country = area.country[0].value;
-    const tempC = condition.temp_C;
-    const tempF = condition.temp_F;
-    const code = parseInt(condition.weatherCode);
-    const desc = weatherIcon(code);
-
+    const tempC   = condition.temp_C;
+    const tempF   = condition.temp_F;
+    const code    = parseInt(condition.weatherCode);
     document.getElementById("weather-location").textContent = `${city}, ${country}`;
-    document.getElementById("weather-icon").textContent = desc;
-    document.getElementById("weather-temp").textContent = `${tempC}°C / ${tempF}°F`;
+    document.getElementById("weather-icon").textContent     = weatherIcon(code);
+    document.getElementById("weather-temp").textContent     = `${tempC}°C / ${tempF}°F`;
   } catch (e) {
     // silently fail — weather is decorative
   }
 }
-
 fetchWeather();
-setInterval(fetchWeather, 10 * 60 * 1000); // refresh every 10 minutes
+setInterval(fetchWeather, 10 * 60 * 1000);
 
-// reduce volume gradually in night mode
 function fadeToVolume(targetLevel) {
-  if (fadeInterval) {
-    clearInterval(fadeInterval);
-  }
+  if (fadeInterval) clearInterval(fadeInterval);
   const step = targetLevel > currentVolumeLevel ? 1 : -1;
-
   fadeInterval = setInterval(() => {
     if (currentVolumeLevel === targetLevel) {
       clearInterval(fadeInterval);
@@ -548,5 +467,170 @@ function fadeToVolume(targetLevel) {
       currentVolumeLevel += step;
       updateVolume();
     }
-  }, 5000); // volume reduce 1 level after every 5s
+  }, 5000);
 }
+
+/* ==============================
+  AMBIENT SOUNDS
+  Files expected in ambient-sounds/ folder:
+  rain.mp3 · waves.mp3 · birds.mp3 · campfire.mp3 · cafe.mp3
+============================== */
+
+const ambientSources = {
+  rain:     "ambient-sounds/rain.mp3",
+  waves:    "ambient-sounds/waves.mp3",
+  birds:    "ambient-sounds/birds.mp3",
+  campfire: "ambient-sounds/campfire.mp3",
+  cafe:     "ambient-sounds/cafe.mp3",
+};
+
+const ambientAudios = {};
+
+Object.entries(ambientSources).forEach(([key, src]) => {
+  const audio = new Audio(src);
+  audio.loop   = true;
+  audio.volume = 0;
+  ambientAudios[key] = audio;
+});
+
+function setSliderFill(slider) {
+  const pct = (slider.value / slider.max) * 100;
+  slider.style.background =
+    `linear-gradient(to right, #00ff88 ${pct}%, rgba(0,255,136,0.15) ${pct}%)`;
+}
+
+// initialise all sliders at 0
+document.querySelectorAll(".ambient-slider").forEach(slider => setSliderFill(slider));
+
+// slider input → set volume + fill
+document.querySelectorAll(".ambient-slider").forEach(slider => {
+  const sound = slider.dataset.sound;
+
+  slider.addEventListener("input", () => {
+    const vol   = slider.value / 100;
+    const audio = ambientAudios[sound];
+    audio.volume = vol;
+    setSliderFill(slider);
+
+    if (vol > 0 && audio.paused) {
+      audio.play().catch(() => {});
+    } else if (vol === 0) {
+      audio.pause();
+    }
+  });
+});
+
+/* ==============================
+  GIF & PLAYLIST PICKER
+============================== */
+
+const playlistLabels = [
+  "",
+  "Chilled Cow – Study Beats",
+  "Lofi Girl – Rainy Day",
+  "Coffee Shop Ambience",
+  "Late Night Lofi",
+  "Sleepy Lofi Beats",
+];
+
+const gifPickerCard      = document.getElementById("gif-picker-card");
+const playlistPickerCard = document.getElementById("playlist-picker-card");
+const openGifBtn         = document.getElementById("open-gif-picker");
+const openPlaylistBtn    = document.getElementById("open-playlist-picker");
+
+function openCard(card, btn) {
+  // close all cards first
+  document.querySelectorAll(".picker-card").forEach(c => c.classList.add("hidden-card"));
+  document.querySelectorAll(".bottom-icon-btn").forEach(b => b.classList.remove("active"));
+  card.classList.remove("hidden-card");
+  btn.classList.add("active");
+}
+
+function closeCard(card, btn) {
+  card.classList.add("hidden-card");
+  if (btn) btn.classList.remove("active");
+}
+
+// ── Build GIF grid ──
+const gifGrid = document.getElementById("gif-grid");
+gifs.forEach((src, i) => {
+  const el = document.createElement("div");
+  el.classList.add("gif-option");
+  if (i === currentIndex) el.classList.add("active");
+  el.innerHTML = `<img src="${src}" loading="lazy" /><span class="gif-active-badge">▶</span>`;
+  el.addEventListener("click", () => {
+    currentIndex = i;
+    updateBackground();
+    syncPickerStates();
+  });
+  gifGrid.appendChild(el);
+});
+
+// ── Build Playlist list ──
+const playlistList = document.getElementById("playlist-list");
+playlist.forEach((id, i) => {
+  const el = document.createElement("div");
+  el.classList.add("playlist-option");
+  if (i === currentIndex) el.classList.add("active");
+  el.innerHTML = `
+    <span class="playlist-num">${String(i + 1).padStart(2, "0")}</span>
+    <span class="playlist-name">${playlistLabels[i] || id}</span>
+    <span class="playlist-playing-icon">▶</span>
+  `;
+  el.addEventListener("click", () => {
+    currentIndex = i;
+    if (player) player.loadVideoById(playlist[currentIndex]);
+    updateBackground();
+    syncPickerStates();
+    closeCard(playlistPickerCard, openPlaylistBtn);
+  });
+  playlistList.appendChild(el);
+});
+
+// keep both pickers in sync whenever the track changes
+function syncPickerStates() {
+  document.querySelectorAll(".gif-option").forEach((el, i) =>
+    el.classList.toggle("active", i === currentIndex));
+  document.querySelectorAll(".playlist-option").forEach((el, i) =>
+    el.classList.toggle("active", i === currentIndex));
+}
+
+// patch updateBackground so prev/next also syncs picker state
+const _origUpdateBg = updateBackground;
+updateBackground = function() {
+  _origUpdateBg();
+  syncPickerStates();
+};
+
+// ── Button listeners ──
+openGifBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  gifPickerCard.classList.contains("hidden-card")
+    ? openCard(gifPickerCard, openGifBtn)
+    : closeCard(gifPickerCard, openGifBtn);
+});
+
+openPlaylistBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  playlistPickerCard.classList.contains("hidden-card")
+    ? openCard(playlistPickerCard, openPlaylistBtn)
+    : closeCard(playlistPickerCard, openPlaylistBtn);
+});
+
+// close-button (✕) on each card
+document.querySelectorAll(".picker-card-close").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const card  = btn.closest(".picker-card");
+    const isGif = card.id === "gif-picker-card";
+    closeCard(card, isGif ? openGifBtn : openPlaylistBtn);
+  });
+});
+
+// click outside closes both cards
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".picker-card") && !e.target.closest(".bottom-icon-btn")) {
+    closeCard(gifPickerCard, openGifBtn);
+    closeCard(playlistPickerCard, openPlaylistBtn);
+  }
+});
