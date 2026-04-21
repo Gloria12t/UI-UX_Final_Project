@@ -6,7 +6,6 @@ const cursorOptions = [
   { emoji: "🌸", label: "Sakura" },
   { emoji: "🐱", label: "Cat"    },
   { emoji: "👀", label: "Eyes"   },
-  { emoji: "🌙", label: "Moon"   },
   { emoji: "🍵", label: "Matcha" },
   { emoji: "⚡", label: "Bolt"   },
   { emoji: "👻", label: "Ghost"  },
@@ -91,6 +90,10 @@ const playlist = [
   "lTRiuFIWV54",
   "UJs6__K7gSY",
   "AAbK---4bB4",
+  "iYesXBFWtls",
+  "Rik8YhvH09M",
+  "lrE8fWHHyW4",
+  "vCTRNKPJr40",
 ];
 
 // gif list
@@ -104,6 +107,10 @@ const gifs = [
   "gif/gif7.gif",
   "gif/gif8.gif",
   "gif/gif9.gif",
+  "gif/gif10.gif",
+  "gif/gif11.gif",
+  "gif/gif12.gif",
+  "gif/gif13.gif",
 ];
 
 let currentIndex = 0;
@@ -539,7 +546,11 @@ const playlistLabels = [
   "High-Energy Lofi Hip Hop Beats for a Powerful Workout",
   "1 A.M Study Session [lofi hip hop]",
   "Bedtime Lofi 8 hours of relaxing beats to sleep to",
-  "Matcha Cafe Relaxing Vintage Jazz for Studying & Reading | Animal Crossing Ambience"
+  "Matcha Cafe Relaxing Vintage Jazz for Studying & Reading | Animal Crossing Ambience",
+  "nostalgic minecraft music for sleeping or studying...",
+  "Cozy Fireplace Ambiance & Lofi Music | Relaxing Study and Chill",
+  "winter _____ . | peaceful acoustic",
+  "minecraft music for studying (c418 & lena raine)",
 ];
 
 const gifPickerCard      = document.getElementById("gif-picker-card");
