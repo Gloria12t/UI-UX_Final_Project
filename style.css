@@ -831,3 +831,110 @@
   opacity: 1;
 }
 
+/* Playlist tabs */
+.playlist-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+}
+
+.playlist-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Courier Prime", monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.playlist-tab:hover {
+  color: rgba(0, 255, 136, 0.7);
+}
+
+.playlist-tab.active {
+  color: #00ff88;
+  border-bottom-color: #00ff88;
+}
+
+.playlist-mode-list.hidden-mode {
+  display: none;
+}
+
+/* Custom playlist add row */
+#custom-add-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+#custom-url-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  color: white;
+  font-family: "Courier Prime", monospace;
+  font-size: 12px;
+  padding: 8px 10px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#custom-url-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+#custom-url-input:focus {
+  border-color: #00ff88;
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+}
+
+#custom-url-input.invalid {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+}
+
+#custom-add-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  color: #00ff88;
+  font-family: "Courier Prime", monospace;
+  font-size: 16px;
+  width: 32px;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+#custom-add-btn:hover {
+  background: rgba(0, 255, 136, 0.12);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.25);
+}
+
+/* Custom playlist empty state */
+#custom-empty-state {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 24px 10px;
+  line-height: 1.6;
+}
+
+/* Custom track remove button */
+.playlist-remove {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 14px;
+  padding: 0 4px;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.playlist-remove:hover {
+  color: #ff6b6b;
+}
+
