@@ -334,15 +334,27 @@ function toggleUI() {
   HIDE UI MODE
 ============================== */
 
+const hideableIds = [
+  "ui-layer",
+  "ambient-panel",
+  "bottom-center-controls",
+  "top-right-controls",
+  "pomodoro-card",
+];
+
 function hideUI() {
   if (!hideModeEnabled) return;
-  const ui = document.getElementById("ui-layer");
-  ui.classList.add("hidden-ui");
+  hideableIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("hidden-ui");
+  });
 }
 
 function showUI() {
-  const ui = document.getElementById("ui-layer");
-  ui.classList.remove("hidden-ui");
+  hideableIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("hidden-ui");
+  });
 }
 
 function resetInactivityTimer() {
