@@ -153,17 +153,43 @@ function onPlayerStateChange(event) {
   }
 }
 
+// ── Custom playlist state (in-memory, resets on close/refresh) ──
+let playlistMode = "default";           // "default" or "custom"
+const customPlaylist = [];              // array of { id, title }
+let customIndex = 0;
+
+function activeList() {
+  return playlistMode === "custom" ? customPlaylist.map(t => t.id) : playlist;
+}
+
+function activeIndexRef() {
+  return playlistMode === "custom" ? "custom" : "default";
+}
+
+function getActiveIndex() {
+  return playlistMode === "custom" ? customIndex : currentIndex;
+}
+
+function setActiveIndex(idx) {
+  if (playlistMode === "custom") customIndex = idx;
+  else currentIndex = idx;
+}
+
 function randomIndex() {
+  const list = activeList();
+  const cur = getActiveIndex();
   let idx;
-  do { idx = Math.floor(Math.random() * playlist.length); }
-  while (idx === currentIndex && playlist.length > 1);
+  do { idx = Math.floor(Math.random() * list.length); }
+  while (idx === cur && list.length > 1);
   return idx;
 }
 
 function playNextSong() {
-  currentIndex = (currentIndex + 1) % playlist.length;
-  player.loadVideoById(playlist[currentIndex]);
-  updateBackground();
+  const list = activeList();
+  if (list.length === 0) return;
+  setActiveIndex((getActiveIndex() + 1) % list.length);
+  player.loadVideoById(list[getActiveIndex()]);
+  if (playlistMode === "default") updateBackground();
 }
 
 function updateBackground() {
@@ -190,16 +216,20 @@ function updatePlayPauseButton(isPlaying) {
 
 function previous() {
   if (!player) return;
-  currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
-  player.loadVideoById(playlist[currentIndex]);
-  updateBackground();
+  const list = activeList();
+  if (list.length === 0) return;
+  setActiveIndex((getActiveIndex() - 1 + list.length) % list.length);
+  player.loadVideoById(list[getActiveIndex()]);
+  if (playlistMode === "default") updateBackground();
 }
 
 function next() {
   if (!player) return;
-  currentIndex = (currentIndex + 1) % playlist.length;
-  player.loadVideoById(playlist[currentIndex]);
-  updateBackground();
+  const list = activeList();
+  if (list.length === 0) return;
+  setActiveIndex((getActiveIndex() + 1) % list.length);
+  player.loadVideoById(list[getActiveIndex()]);
+  if (playlistMode === "default") updateBackground();
 }
 
 function updateSongTitle() {
@@ -226,7 +256,16 @@ document.getElementById("prev").addEventListener("click", previous);
 document.getElementById("next").addEventListener("click", next);
 
 document.body.addEventListener('click', function(event) {
-  if (event.target.tagName === 'BUTTON' || event.target.closest('.controls')) return;
+  if (
+    event.target.tagName === 'BUTTON' ||
+    event.target.tagName === 'INPUT' ||
+    event.target.closest('.controls') ||
+    event.target.closest('.picker-card') ||
+    event.target.closest('#bottom-center-controls') ||
+    event.target.closest('#top-right-controls') ||
+    event.target.closest('#pomodoro-card') ||
+    event.target.closest('#ambient-panel')
+  ) return;
   togglePlayPause();
 });
 
@@ -598,6 +637,7 @@ playlist.forEach((id, i) => {
     <span class="playlist-playing-icon">▶</span>
   `;
   el.addEventListener("click", () => {
+    playlistMode = "default";
     currentIndex = i;
     if (player) player.loadVideoById(playlist[currentIndex]);
     updateBackground();
@@ -611,8 +651,10 @@ playlist.forEach((id, i) => {
 function syncPickerStates() {
   document.querySelectorAll(".gif-option").forEach((el, i) =>
     el.classList.toggle("active", i === currentIndex));
-  document.querySelectorAll(".playlist-option").forEach((el, i) =>
-    el.classList.toggle("active", i === currentIndex));
+  document.querySelectorAll("#playlist-list .playlist-option").forEach((el, i) =>
+    el.classList.toggle("active", playlistMode === "default" && i === currentIndex));
+  document.querySelectorAll("#custom-playlist-list .playlist-option").forEach((el, i) =>
+    el.classList.toggle("active", playlistMode === "custom" && i === customIndex));
 }
 
 // patch updateBackground so prev/next also syncs picker state
@@ -654,6 +696,118 @@ document.addEventListener("click", (e) => {
     closeCard(playlistPickerCard, openPlaylistBtn);
   }
 });
+
+/* ==============================
+  CUSTOM PLAYLIST (session-only)
+============================== */
+
+const customListEl  = document.getElementById("custom-playlist-list");
+const customInput   = document.getElementById("custom-url-input");
+const customAddBtn  = document.getElementById("custom-add-btn");
+const emptyStateEl  = document.getElementById("custom-empty-state");
+
+function extractYouTubeId(url) {
+  const regex = /(?:youtube\.com\/(?:.*[?&]v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+async function fetchVideoTitle(id) {
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`);
+    if (!res.ok) return id;
+    const data = await res.json();
+    return data.title || id;
+  } catch {
+    return id;
+  }
+}
+
+function renderCustomList() {
+  // remove all existing track rows
+  customListEl.querySelectorAll(".playlist-option").forEach(el => el.remove());
+
+  if (customPlaylist.length === 0) {
+    emptyStateEl.style.display = "";
+    return;
+  }
+  emptyStateEl.style.display = "none";
+
+  customPlaylist.forEach((track, i) => {
+    const el = document.createElement("div");
+    el.classList.add("playlist-option");
+    if (playlistMode === "custom" && i === customIndex) el.classList.add("active");
+    el.innerHTML = `
+      <span class="playlist-num">${String(i + 1).padStart(2, "0")}</span>
+      <span class="playlist-name">${track.title}</span>
+      <span class="playlist-playing-icon">▶</span>
+      <button class="playlist-remove" title="Remove">✕</button>
+    `;
+    el.addEventListener("click", (e) => {
+      if (e.target.classList.contains("playlist-remove")) {
+        e.stopPropagation();
+        removeCustomTrack(i);
+        return;
+      }
+      playlistMode = "custom";
+      customIndex = i;
+      if (player) player.loadVideoById(track.id);
+      syncPickerStates();
+      closeCard(playlistPickerCard, openPlaylistBtn);
+    });
+    customListEl.appendChild(el);
+  });
+}
+
+async function addCustomTrack(url) {
+  const id = extractYouTubeId(url.trim());
+  if (!id) {
+    customInput.classList.add("invalid");
+    setTimeout(() => customInput.classList.remove("invalid"), 700);
+    return;
+  }
+  customInput.value = "";
+  // optimistic placeholder while we fetch the title
+  const track = { id, title: "Loading..." };
+  customPlaylist.push(track);
+  renderCustomList();
+
+  track.title = await fetchVideoTitle(id);
+  renderCustomList();
+}
+
+function removeCustomTrack(i) {
+  customPlaylist.splice(i, 1);
+
+  // keep customIndex sensible
+  if (playlistMode === "custom") {
+    if (customIndex === i) {
+      // the currently playing custom track was removed
+      customIndex = Math.min(customIndex, customPlaylist.length - 1);
+    } else if (customIndex > i) {
+      customIndex--;
+    }
+  }
+  renderCustomList();
+}
+
+customAddBtn.addEventListener("click", () => addCustomTrack(customInput.value));
+customInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addCustomTrack(customInput.value);
+});
+
+// ── Tab switching ──
+document.querySelectorAll(".playlist-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    const mode = tab.dataset.mode;
+    document.querySelectorAll(".playlist-tab").forEach(t =>
+      t.classList.toggle("active", t === tab));
+    document.querySelectorAll(".playlist-mode-list").forEach(list =>
+      list.classList.toggle("hidden-mode", list.dataset.mode !== mode));
+  });
+});
+
+renderCustomList();
 
 /* ==============================
   POMODORO TIMER

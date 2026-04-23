@@ -134,7 +134,26 @@
       <span class="picker-card-title">Choose Track</span>
       <button class="picker-card-close">✕</button>
     </div>
-    <div class="picker-card-list" id="playlist-list"></div>
+
+    <!-- Tabs -->
+    <div class="playlist-tabs">
+      <button class="playlist-tab active" data-mode="default">Default</button>
+      <button class="playlist-tab" data-mode="custom">Custom</button>
+    </div>
+
+    <!-- Default playlist -->
+    <div class="picker-card-list playlist-mode-list" id="playlist-list" data-mode="default"></div>
+
+    <!-- Custom playlist -->
+    <div class="playlist-mode-list hidden-mode" data-mode="custom">
+      <div id="custom-add-row">
+        <input type="text" id="custom-url-input" placeholder="Paste a YouTube URL..." />
+        <button id="custom-add-btn">+</button>
+      </div>
+      <div class="picker-card-list" id="custom-playlist-list">
+        <div id="custom-empty-state">No custom tracks yet.<br/>Paste a YouTube URL above to add one.</div>
+      </div>
+    </div>
   </div>
 
   <div id="pomodoro-card" class="hidden-pomodoro">
