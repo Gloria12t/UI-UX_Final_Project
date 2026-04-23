@@ -12,6 +12,8 @@ A browser-based lofi music player inspired by [lofi.cafe](https://lofi.cafe). En
 - **Volume control** — 10-bar volume slider with animated dancing bars and a mute toggle
 - **Retro visual effects** — film grain, CRT scanlines, and vignette overlay
 - **Keyboard shortcuts** — control everything without touching the mouse
+- **Custom playlist** - custom playlist that let user add their favorite songs
+- **Pomodoro** - pomodoro clock for setting up concentration time
 
 ---
 
