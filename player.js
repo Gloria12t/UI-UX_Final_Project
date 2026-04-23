@@ -190,12 +190,23 @@ function playNextSong() {
   setActiveIndex((getActiveIndex() + 1) % list.length);
   player.loadVideoById(list[getActiveIndex()]);
   if (playlistMode === "default") updateBackground();
+  else cycleRandomGif();
 }
 
 function updateBackground() {
   const img = document.getElementById("background-gif");
   if (!img) return;
   img.src = gifs[currentIndex];
+}
+
+function cycleRandomGif() {
+  const img = document.getElementById("background-gif");
+  if (!img) return;
+  const currentSrc = img.getAttribute("src");
+  let pick;
+  do { pick = gifs[Math.floor(Math.random() * gifs.length)]; }
+  while (pick === currentSrc && gifs.length > 1);
+  img.src = pick;
 }
 
 function togglePlayPause() {
@@ -221,6 +232,7 @@ function previous() {
   setActiveIndex((getActiveIndex() - 1 + list.length) % list.length);
   player.loadVideoById(list[getActiveIndex()]);
   if (playlistMode === "default") updateBackground();
+  else cycleRandomGif();
 }
 
 function next() {
@@ -230,6 +242,7 @@ function next() {
   setActiveIndex((getActiveIndex() + 1) % list.length);
   player.loadVideoById(list[getActiveIndex()]);
   if (playlistMode === "default") updateBackground();
+  else cycleRandomGif();
 }
 
 function updateSongTitle() {
@@ -752,6 +765,7 @@ function renderCustomList() {
       playlistMode = "custom";
       customIndex = i;
       if (player) player.loadVideoById(track.id);
+      cycleRandomGif();
       syncPickerStates();
       closeCard(playlistPickerCard, openPlaylistBtn);
     });
