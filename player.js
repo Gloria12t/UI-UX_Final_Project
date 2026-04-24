@@ -97,7 +97,7 @@ const playlist = [
   "Rik8YhvH09M",
   "lrE8fWHHyW4",
 
-  "vCTRNKPJr40",
+  "iYesXBFWtls",
   "I140iNpx1xM",
   "wshfwlnT1lc",
 
@@ -142,6 +142,7 @@ const gifs = [
 ];
 
 let currentIndex = 0;
+let gifIndex = 0;
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
@@ -224,7 +225,7 @@ function playNextSong() {
 function updateBackground() {
   const img = document.getElementById("background-gif");
   if (!img) return;
-  img.src = gifs[currentIndex];
+  img.src = gifs[gifIndex];  // ← was gifs[currentIndex]
 }
 
 function cycleRandomGif() {
@@ -655,7 +656,7 @@ const playlistLabels = [
   "Cozy Fireplace Ambiance & Lofi Music | Relaxing Study and Chill",
   "winter _____ . | peaceful acoustic",
 
-  "minecraft music for studying (c418 & lena raine)",
+  "nostalgic minecraft music for sleeping or studying...",
   "Lofi HipHop Mix Happy and Uplifting Beats for a Beautiful Day",
   "Action is the foundational key. Deep Focus | Jazz LoFi for Productivity",
 
@@ -698,7 +699,7 @@ gifs.forEach((src, i) => {
   if (i === currentIndex) el.classList.add("active");
   el.innerHTML = `<img src="${src}" loading="lazy" /><span class="gif-active-badge">▶</span>`;
   el.addEventListener("click", () => {
-    currentIndex = i;
+    gifIndex = i;
     updateBackground();
     syncPickerStates();
   });
@@ -730,7 +731,7 @@ playlist.forEach((id, i) => {
 // keep both pickers in sync whenever the track changes
 function syncPickerStates() {
   document.querySelectorAll(".gif-option").forEach((el, i) =>
-    el.classList.toggle("active", i === currentIndex));
+    el.classList.toggle("active", i === gifIndex));
   document.querySelectorAll("#playlist-list .playlist-option").forEach((el, i) =>
     el.classList.toggle("active", playlistMode === "default" && i === currentIndex));
   document.querySelectorAll("#custom-playlist-list .playlist-option").forEach((el, i) =>
