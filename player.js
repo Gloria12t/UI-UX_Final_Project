@@ -84,16 +84,34 @@ const playlist = [
   "AZals4U6Z_I",
   "QA9FpizKFeU",
   "WRhH-0rL5hw",
+
   "HGl75kurxok",
   "9kzE8isXlQY",
   "gGOpElxqlQw",
+
   "lTRiuFIWV54",
   "UJs6__K7gSY",
   "AAbK---4bB4",
+
   "iYesXBFWtls",
   "Rik8YhvH09M",
   "lrE8fWHHyW4",
+
   "vCTRNKPJr40",
+  "I140iNpx1xM",
+  "wshfwlnT1lc",
+
+  "4VXErA63_eg",
+  "CzVNX_fErcE",
+  "bXABghLhGGQ",
+
+  "JdqL89ZZwFw",
+  "ivdPyFUPbAk",
+  "sF80I-TQiW0",
+
+  "1fueZCTYkpA",
+  "zhDwjnYZiCo",
+
 ];
 
 // gif list
@@ -111,6 +129,16 @@ const gifs = [
   "gif/gif11.gif",
   "gif/gif12.gif",
   "gif/gif13.gif",
+  "gif/gif14.gif",
+  "gif/gif15.gif",
+  "gif/gif16.gif",
+  "gif/gif17.gif",
+  "gif/gif18.gif",
+  "gif/gif19.gif",
+  "gif/gif20.gif",
+  "gif/gif21.gif",
+  "gif/gif22.gif",
+  "gif/gif23.gif",
 ];
 
 let currentIndex = 0;
@@ -326,10 +354,18 @@ addEventListener('keydown', function(event) {
 });
 
 function toggleUI() {
-  const app = document.querySelector('.app');
-  app.classList.toggle('hidden');
+  const els = [
+    document.querySelector('.app'),
+    document.querySelector('#top-right-controls'),
+    document.querySelector('#ambient-panel'),
+    document.querySelector('#weather-widget'),
+    document.querySelector('#bottom-center-controls'),
+    document.querySelector('#pomodoro-card'),
+  ];
+  els.forEach(el => {
+    if (el) el.classList.toggle('hidden');
+  });
 }
-
 /* ==============================
   HIDE UI MODE
 ============================== */
@@ -602,19 +638,38 @@ document.querySelectorAll(".ambient-slider").forEach(slider => {
 ============================== */
 
 const playlistLabels = [
-  "chill / relax / study music | studio ghibli lo-fi jazz mix",
+  
+ "chill / relax / study music | studio ghibli lo-fi jazz mix",
   "Paris Cafe French Instrumental Music — Coffee Playlist | Guitar, Piano & Accordion",
   "Ghibili & Lofi| Relaxing Studio Ghibli Lo-Fi Music Playlist",
+
   "Piano Ghibli Collection",
   "Less talk.... more action. / Lo-fi for study, work ( with Rain sounds)",
   "High-Energy Lofi Hip Hop Beats for a Powerful Workout",
+
   "1 A.M Study Session [lofi hip hop]",
   "Bedtime Lofi 8 hours of relaxing beats to sleep to",
   "Matcha Cafe Relaxing Vintage Jazz for Studying & Reading | Animal Crossing Ambience",
+
   "nostalgic minecraft music for sleeping or studying...",
   "Cozy Fireplace Ambiance & Lofi Music | Relaxing Study and Chill",
   "winter _____ . | peaceful acoustic",
+
   "minecraft music for studying (c418 & lena raine)",
+  "Lofi HipHop Mix Happy and Uplifting Beats for a Beautiful Day",
+  "Action is the foundational key. Deep Focus | Jazz LoFi for Productivity",
+
+  "Interstellar - Hans Zimmer (Soft Version) Sleep, Study, Relax - 1 Hour",
+  "Coldplay - Soft Piano [sleep, study, relax, calm, chill, no mid-roll ads, instrumental]",
+  "Ed Sheeran - Soft Piano [sleep, study, relax, calm, chill, no mid-roll ads, instrumental]",
+
+  "Quiet  Lofi Keep You Safe  Serenity to Deep focus work, relax [ Lofi hip hop - Lofi Summer ]",
+  "4 Hours Deep Focus | 50/10 Pomodoro (Lofi Study and Work)",
+  "90's Chill Lofi Study Music Lofi Rain Chillhop Beats Lofi Rain Playlist",
+
+  "Morning Coffee  [lofi hip hop]",
+  "Ghibli Coffee Shop Music to put you in a better mood  lofi hip hop - lofi songs | study / relax",
+
 ];
 
 const gifPickerCard      = document.getElementById("gif-picker-card");
