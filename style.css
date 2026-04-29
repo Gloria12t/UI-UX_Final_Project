@@ -322,6 +322,18 @@
   display: inline-block;
 }
 
+#song-title-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+
+#song-title-link:hover {
+  color: #00ff88;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+}
+
 #song-title span.scrolling {
   animation: marquee-scroll linear infinite;
 }
