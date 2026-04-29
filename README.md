@@ -1,6 +1,7 @@
 # Lofi Music Player 🎵
 
 A browser-based lofi music player inspired by [lofi.cafe](https://lofi.cafe). Enjoy curated lofi beats with animated GIF backgrounds and a retro CRT aesthetic.
+Live on Render: [ux-ui-final-project.com](https://ui-ux-final-project.onrender.com)
 
 ---
 
