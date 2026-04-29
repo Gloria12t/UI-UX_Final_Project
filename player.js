@@ -279,6 +279,12 @@ function updateSongTitle() {
   const titleEl = document.getElementById("song-title");
   if (!data || !data.title) return;
 
+  const link = document.getElementById("song-title-link");
+  if (link && data.video_id) {
+    link.href = `https://www.youtube.com/watch?v=${data.video_id}`;
+    link.title = `Watch "${data.title}" on YouTube`;
+  }
+
   const span = titleEl.querySelector("span");
   span.classList.remove("scrolling");
   span.textContent = data.title;
@@ -306,7 +312,8 @@ document.body.addEventListener('click', function(event) {
     event.target.closest('#bottom-center-controls') ||
     event.target.closest('#top-right-controls') ||
     event.target.closest('#pomodoro-card') ||
-    event.target.closest('#ambient-panel')
+    event.target.closest('#ambient-panel') ||
+    event.target.closest('#song-title')
   ) return;
   togglePlayPause();
 });
