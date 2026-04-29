@@ -84,7 +84,7 @@
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-#pomodoro-card.hidden-pomodoro {
+.hidden-pomodoro {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-6px);
@@ -950,3 +950,61 @@
   color: #ff6b6b;
 }
 
+#toggle-sleep {
+  background: transparent;
+  border: none;
+  color: #00ff88;
+  font-family: "Courier Prime", monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: transform 0.3s ease, text-shadow 0.2s ease;
+}
+
+#toggle-sleep:hover {
+  text-shadow: 0 0 8px #00ff88;
+  transform: scale(1.15);
+}
+
+#toggle-sleep.active {
+  text-shadow: 0 0 8px #00ff88;
+}
+
+#sleep-card {
+  position: fixed;
+  top: 56px;
+  right: 20px;
+  z-index: 20;
+  padding: 16px;
+  width: 200px;
+  font-family: "Courier Prime", monospace;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#sleep-display {
+  font-size: 40px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 14px;
+  line-height: 1;
+}
+
+#screen-fade {
+  position: fixed;
+  inset: 0;
+  background: black;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 30s ease;
+}
+
+#screen-fade.fading {
+  opacity: 1;
+}

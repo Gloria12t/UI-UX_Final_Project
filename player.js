@@ -956,11 +956,15 @@ function pomAdd5() {
   pomRender();
 }
 
-// toggle card open/close
 pomToggleBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   const isHidden = pomCard.classList.toggle("hidden-pomodoro");
   pomToggleBtn.classList.toggle("active", !isHidden);
+  // close sleep card when pomodoro opens
+  if (!isHidden) {
+    sleepCard.classList.add("hidden-pomodoro");
+    sleepToggleBtn.classList.remove("active");
+  }
 });
 
 // close when clicking outside
@@ -975,3 +979,93 @@ document.getElementById("pom-start").addEventListener("click", pomStart);
 document.getElementById("pom-pause").addEventListener("click", pomPause);
 document.getElementById("pom-stop").addEventListener("click",  pomStop);
 document.getElementById("pom-add5").addEventListener("click",  pomAdd5);
+
+/* ==============================
+  SLEEP TIMER
+============================== */
+
+let sleepSeconds  = 0;
+let sleepRunning  = false;
+let sleepInterval = null;
+
+const sleepDisplay   = document.getElementById("sleep-display");
+const sleepCard      = document.getElementById("sleep-card");
+const sleepToggleBtn = document.getElementById("toggle-sleep");
+
+// create fade overlay
+const fadeOverlay = document.createElement("div");
+fadeOverlay.id = "screen-fade";
+document.body.appendChild(fadeOverlay);
+
+function sleepRender() {
+  if (sleepSeconds <= 0) {
+    sleepDisplay.textContent = "-- : --";
+    return;
+  }
+  const m = Math.floor(sleepSeconds / 60);
+  const s = sleepSeconds % 60;
+  sleepDisplay.textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function startSleepTimer(minutes) {
+  if (sleepInterval) clearInterval(sleepInterval);
+  sleepSeconds = minutes * 60;
+  sleepRunning = true;
+  sleepRender();
+
+  document.querySelectorAll(".sleep-preset").forEach(btn => {
+    btn.classList.toggle("pom-active", parseInt(btn.dataset.mins) === minutes);
+  });
+
+  sleepInterval = setInterval(() => {
+    sleepSeconds--;
+    sleepRender();
+
+    if (sleepSeconds === 30) {
+      fadeOverlay.classList.add("fading");
+    }
+
+    if (sleepSeconds <= 0) {
+      clearInterval(sleepInterval);
+      sleepRunning = false;
+      if (player) player.pauseVideo();
+      Object.values(ambientAudios).forEach(a => { a.pause(); });
+      sleepDisplay.textContent = "-- : --";
+      document.querySelectorAll(".sleep-preset").forEach(btn =>
+        btn.classList.remove("pom-active"));
+    }
+  }, 1000);
+}
+
+function cancelSleepTimer() {
+  if (sleepInterval) clearInterval(sleepInterval);
+  sleepRunning = false;
+  sleepSeconds = 0;
+  sleepRender();
+  fadeOverlay.classList.remove("fading");
+  document.querySelectorAll(".sleep-preset").forEach(btn =>
+    btn.classList.remove("pom-active"));
+}
+
+document.querySelectorAll(".sleep-preset").forEach(btn => {
+  btn.addEventListener("click", () => startSleepTimer(parseInt(btn.dataset.mins)));
+});
+
+document.getElementById("sleep-cancel").addEventListener("click", cancelSleepTimer);
+
+sleepToggleBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const isHidden = sleepCard.classList.toggle("hidden-pomodoro");
+  sleepToggleBtn.classList.toggle("active", !isHidden);
+  // close pomodoro card when sleep opens
+  if (!isHidden) {
+    pomCard.classList.add("hidden-pomodoro");
+    pomToggleBtn.classList.remove("active");
+  }
+});
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("#sleep-card") && !e.target.closest("#toggle-sleep")) {
+    sleepCard.classList.add("hidden-pomodoro");
+    sleepToggleBtn.classList.remove("active");
+  }
+});

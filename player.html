@@ -24,6 +24,7 @@
 
   <!-- Top-right: toggle-hide-ui ABOVE cursor picker -->
   <div id="top-right-controls">
+    <button id="toggle-sleep">sleep timer</button>
     <button id="toggle-pomodoro">pomodoro</button>
     <button id="toggle-hide-ui">◐</button>
     <div id="cursor-picker">
@@ -167,6 +168,19 @@
     <button class="pom-btn" id="pom-add5">+5 Min</button>
     </div>
 </div>
+
+<div id="sleep-card" class="hidden-pomodoro">
+  <div id="sleep-display">-- : --</div>
+  <div class="pomodoro-btns">
+    <button class="pom-btn sleep-preset" data-mins="15">15 min</button>
+    <button class="pom-btn sleep-preset" data-mins="20">20 min</button>
+    <button class="pom-btn sleep-preset" data-mins="30">30 min</button>
+  </div>
+  <div class="pomodoro-btns">
+    <button class="pom-btn" id="sleep-cancel">Cancel</button>
+  </div>
+</div>
+
   <script src="player.js"></script>
 </body>
 </html>
