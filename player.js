@@ -999,7 +999,7 @@ document.body.appendChild(fadeOverlay);
 
 function sleepRender() {
   if (sleepSeconds <= 0) {
-    sleepDisplay.textContent = "-- : --";
+    sleepDisplay.textContent = "00:00";
     return;
   }
   const m = Math.floor(sleepSeconds / 60);
